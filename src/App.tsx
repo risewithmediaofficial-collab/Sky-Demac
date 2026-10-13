@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { business, confirmedServices, type CareCategory } from "./config";
-import HeroStory from "./components/HeroStory";
+import FoldingHero from "./components/FoldingHero";
 import EnquiryForm from "./components/EnquiryForm";
 import SafeImage from "./components/SafeImage";
 import { useSectionReveals } from "./components/useSectionReveals";
@@ -727,7 +727,7 @@ export default function App() {
       </a>
       <Navigation />
       <main>
-        <HeroStory />
+        <FoldingHero />
         <div className="brand-strip">
           <div className="wrap">
             <span>COMPLETE AUTOMOTIVE CARE</span>

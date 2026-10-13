@@ -1,4 +1,4 @@
-﻿@font-face {
+@font-face {
   font-family: Inter;
   src: url("/fonts/inter-latin.woff2") format("woff2");
   font-style: normal;
@@ -114,7 +114,7 @@ svg {
   flex-shrink: 0;
 }
 section[id] {
-  scroll-margin-top: 78px;
+  scroll-margin-top: 74px;
 }
 section:focus {
   outline: none;

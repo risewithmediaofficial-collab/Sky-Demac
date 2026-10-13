@@ -48,3 +48,14 @@ for (const [name, transform] of tasks) {
   const result = await transform(sharp(source)).toFile(`public/images/${name}`);
   console.log(`${name}: ${Math.round(result.size / 1024)} KB`);
 }
+const aliases = [
+  ["hero.webp", "scene-wide.webp"],
+  ["hero-mobile.webp", "scene-wide-mobile.webp"],
+  ["mechanical.webp", "scene-wheel.webp"],
+  ["detailing.webp", "scene-detail.webp"],
+  ["exterior.webp", "scene-exterior.webp"],
+];
+for (const [src, dest] of aliases) {
+  await sharp(`public/images/${src}`).toFile(`public/images/${dest}`);
+  console.log(`Aliased ${src} -> ${dest}`);
+}
