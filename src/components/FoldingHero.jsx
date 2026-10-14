@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { ArrowDown, ArrowUpRight, ChevronRight } from "lucide-react";
 import { isServiceActive } from "../config";
 import SafeImage from "./SafeImage";
@@ -39,14 +40,29 @@ function Caption({ index, align }) {
         </h1>) : (<h2>{scene.title}</h2>)}
       <p className="cinema-support">{scene.copy}</p>
       <div className={`cinema-actions ${isRight ? "actions-right" : "actions-left"}`}>
-        <a href={index === 0 ? "#services" : "#contact"} className="button button-primary">
-          {index === 0 ? "Explore Services" : "Book a Service"}
-          <ArrowUpRight size={17}/>
-        </a>
-        <a href={index === 0 ? "#contact" : "#services"} className="cinema-secondary">
-          {index === 0 ? "Enquire About a Service" : "Explore Services"}
-          <ChevronRight size={15}/>
-        </a>
+        {index === 0 ? (
+          <>
+            <a href="#services" className="button button-primary">
+              Explore Services
+              <ArrowUpRight size={17}/>
+            </a>
+            <Link to="/contact" className="cinema-secondary">
+              Enquire About a Service
+              <ChevronRight size={15}/>
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/contact" className="button button-primary">
+              Book a Service
+              <ArrowUpRight size={17}/>
+            </Link>
+            <Link to="/services" className="cinema-secondary">
+              Explore Services
+              <ChevronRight size={15}/>
+            </Link>
+          </>
+        )}
       </div>
       {index === 4 && (<p className="cinema-enquiry-note">
           Start with a service enquiry. Availability will be confirmed.
@@ -222,9 +238,9 @@ export default function FoldingHero() {
             <span className="floating-callout-price">Complete Automotive Care · From ₹2,499</span>
             <span className="floating-callout-sub">Multi-point diagnostic & bespoke studio care</span>
           </div>
-          <a href="#contact" className="floating-callout-pill">
+          <Link to="/contact" className="floating-callout-pill">
             Enquire Now <ChevronRight size={13}/>
-          </a>
+          </Link>
         </div>
 
         {/* Zig-Zag Alternating Plain Captions (Left & Right) */}

@@ -62,6 +62,7 @@ export default function App() {
           <Route path="/services/:slug" element={<ServicePage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/our-work" element={<GalleryPage />} />
+          <Route path="/work" element={<GalleryPage />} />
           <Route path="/book-service" element={<BookServicePage />} />
           <Route path="/contact" element={<BookServicePage />} />
           <Route path="/about" element={<AboutPage />} />

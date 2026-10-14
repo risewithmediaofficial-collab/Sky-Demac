@@ -52,32 +52,9 @@ export function getCategoryNavIcon(id) {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-  const [active, setActive] = useState("home");
   const toggle = useRef(null);
   const location = useLocation();
   const isHome = location.pathname === "/";
-
-  // IntersectionObserver for tracking active homepage section
-  useEffect(() => {
-    if (!isHome) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-15% 0px -55% 0px" }
-    );
-
-    document
-      .querySelectorAll("main > section[id]")
-      .forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, [isHome]);
 
   // Close menus on Escape key
   useEffect(() => {
@@ -93,19 +70,59 @@ export default function Header() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Track window scroll to toggle transparent vs scrolled header
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const closeMenus = () => {
     setOpen(false);
     setServicesOpen(false);
   };
 
-  const otherLinks = [
-    { id: "our-work", title: "Our Work", href: isHome ? "#our-work" : "/gallery" },
-    { id: "about", title: "About", href: isHome ? "#about" : "/about" },
-    { id: "contact", title: "Contact", href: isHome ? "#contact" : "/contact" },
+  // Determine active nav item based on route
+  const currentPath = location.pathname;
+  let activePage = "home";
+  if (currentPath === "/") {
+    activePage = "home";
+  } else if (
+    currentPath.startsWith("/services") ||
+    business.categories.some((c) => currentPath === `/${c.slug}`)
+  ) {
+    activePage = "services";
+  } else if (
+    currentPath === "/gallery" ||
+    currentPath === "/our-work" ||
+    currentPath === "/work"
+  ) {
+    activePage = "our-work";
+  } else if (currentPath === "/about") {
+    activePage = "about";
+  } else if (
+    currentPath === "/contact" ||
+    currentPath === "/book-service"
+  ) {
+    activePage = "contact";
+  }
+
+  const navLinks = [
+    { id: "our-work", title: "Our Work", href: "/our-work" },
+    { id: "about", title: "About", href: "/about" },
+    { id: "contact", title: "Contact", href: "/contact" },
   ];
 
   return (
-    <header className="site-header">
+    <header
+      className={`site-header ${isScrolled ? "is-scrolled" : ""} ${open ? "menu-open" : ""}`}
+    >
       <div className="nav-wrap wrap">
         {/* Brand Logo / Wordmark */}
         <Link
@@ -129,72 +146,39 @@ export default function Header() {
           aria-label="Main navigation"
         >
           {/* Home Link */}
-          {isHome ? (
-            <a
-              href="#home"
-              className={active === "home" ? "active" : ""}
-              aria-current={active === "home" ? "location" : undefined}
-              onClick={() => {
-                closeMenus();
+          <Link
+            to="/"
+            className={activePage === "home" ? "active" : ""}
+            aria-current={activePage === "home" ? "page" : undefined}
+            onClick={() => {
+              closeMenus();
+              if (isHome) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              Home
-            </a>
-          ) : (
-            <Link
-              to="/"
-              className={active === "home" ? "active" : ""}
-              onClick={closeMenus}
-            >
-              Home
-            </Link>
-          )}
+              }
+            }}
+          >
+            Home
+          </Link>
 
-          {/* Services Dropdown (Desktop Hover & Mobile Expandable) */}
+          {/* Services Dropdown (Click navigates to /services, Hover opens menu) */}
           <div
             className={`nav-dropdown-item ${servicesOpen ? "dropdown-active" : ""}`}
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
-            {isHome ? (
-              <a
-                href="#services"
-                className={`nav-dropdown-trigger ${active === "services" ? "active" : ""}`}
-                onClick={() => {
-                  closeMenus();
-                  requestAnimationFrame(() => {
-                    const target = document.getElementById("services");
-                    if (target) {
-                      target.tabIndex = -1;
-                      target.focus({ preventScroll: true });
-                    }
-                  });
-                }}
-                aria-expanded={servicesOpen}
-                aria-haspopup="true"
-              >
-                <span>Services</span>
-                <ChevronDown
-                  size={14}
-                  className={`dropdown-arrow ${servicesOpen ? "rotate-180" : ""}`}
-                />
-              </a>
-            ) : (
-              <Link
-                to="/services"
-                className={`nav-dropdown-trigger ${active === "services" ? "active" : ""}`}
-                onClick={closeMenus}
-                aria-expanded={servicesOpen}
-                aria-haspopup="true"
-              >
-                <span>Services</span>
-                <ChevronDown
-                  size={14}
-                  className={`dropdown-arrow ${servicesOpen ? "rotate-180" : ""}`}
-                />
-              </Link>
-            )}
+            <Link
+              to="/services"
+              className={`nav-dropdown-trigger ${activePage === "services" ? "active" : ""}`}
+              onClick={closeMenus}
+              aria-expanded={servicesOpen}
+              aria-haspopup="true"
+            >
+              <span>Services</span>
+              <ChevronDown
+                size={14}
+                className={`dropdown-arrow ${servicesOpen ? "rotate-180" : ""}`}
+              />
+            </Link>
 
             {/* Desktop Dropdown Menu */}
             <div
@@ -283,38 +267,18 @@ export default function Header() {
           </div>
 
           {/* Other Nav Links */}
-          {otherLinks.map(({ id, title, href }) => {
-            const isAnchor = href.startsWith("#");
-            return isAnchor ? (
-              <a
-                key={id}
-                href={href}
-                className={active === id ? "active" : ""}
-                aria-current={active === id ? "location" : undefined}
-                onClick={() => {
-                  closeMenus();
-                  requestAnimationFrame(() => {
-                    const target = document.getElementById(id);
-                    if (target) {
-                      target.tabIndex = -1;
-                      target.focus({ preventScroll: true });
-                    }
-                  });
-                }}
-              >
-                {title}
-              </a>
-            ) : (
-              <Link
-                key={id}
-                to={href}
-                className={active === id ? "active" : ""}
-                onClick={closeMenus}
-              >
-                {title}
-              </Link>
-            );
-          })}
+          {/* Other Nav Links */}
+          {navLinks.map(({ id, title, href }) => (
+            <Link
+              key={id}
+              to={href}
+              className={activePage === id ? "active" : ""}
+              aria-current={activePage === id ? "page" : undefined}
+              onClick={closeMenus}
+            >
+              {title}
+            </Link>
+          ))}
 
           {/* Mobile Drawer CTA Button (Strictly hidden on desktop via CSS) */}
           <div className="mobile-drawer-cta">
@@ -329,9 +293,9 @@ export default function Header() {
         </nav>
 
         {/* Desktop Quick Header CTA */}
-        <a
+        <Link
           className="nav-cta"
-          href={isHome ? "#contact" : "/contact"}
+          to="/contact"
           aria-label="Enquire About a Service"
           onClick={closeMenus}
         >
@@ -340,7 +304,7 @@ export default function Header() {
             Enquire
           </span>
           <ArrowUpRight size={15} />
-        </a>
+        </Link>
 
         {/* Mobile Hamburger Menu Toggle */}
         <button
