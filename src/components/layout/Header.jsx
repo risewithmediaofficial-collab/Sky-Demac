@@ -56,6 +56,18 @@ export default function Header() {
   const location = useLocation();
   const isHome = location.pathname === "/";
 
+  // Prevent background scrolling when mobile side drawer is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   // Close menus on Escape key
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -123,6 +135,13 @@ export default function Header() {
     <header
       className={`site-header ${isScrolled ? "is-scrolled" : ""} ${open ? "menu-open" : ""}`}
     >
+      {/* Mobile Drawer Backdrop Overlay */}
+      <div
+        className={`nav-backdrop ${open ? "is-open" : ""}`}
+        onClick={closeMenus}
+        aria-hidden="true"
+      />
+
       <div className="nav-wrap wrap">
         {/* Brand Logo / Wordmark */}
         <Link
@@ -139,12 +158,25 @@ export default function Header() {
           <Wordmark />
         </Link>
 
-        {/* Primary Navigation */}
+        {/* Primary Navigation / Mobile Side Drawer */}
         <nav
           className={`navigation ${open ? "is-open" : ""}`}
           id="primary-navigation"
           aria-label="Main navigation"
         >
+          {/* Mobile Drawer Header with Close Button */}
+          <div className="mobile-drawer-header">
+            <span className="mobile-drawer-title">Navigation</span>
+            <button
+              type="button"
+              className="mobile-drawer-close"
+              onClick={closeMenus}
+              aria-label="Close navigation"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
           {/* Home Link */}
           <Link
             to="/"
@@ -160,25 +192,37 @@ export default function Header() {
             Home
           </Link>
 
-          {/* Services Dropdown (Click navigates to /services, Hover opens menu) */}
+          {/* Services Dropdown (Click navigates to /services, Hover opens menu on desktop, toggle on mobile) */}
           <div
             className={`nav-dropdown-item ${servicesOpen ? "dropdown-active" : ""}`}
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
-            <Link
-              to="/services"
-              className={`nav-dropdown-trigger ${activePage === "services" ? "active" : ""}`}
-              onClick={closeMenus}
-              aria-expanded={servicesOpen}
-              aria-haspopup="true"
-            >
-              <span>Services</span>
-              <ChevronDown
-                size={14}
-                className={`dropdown-arrow ${servicesOpen ? "rotate-180" : ""}`}
-              />
-            </Link>
+            <div className="nav-dropdown-head">
+              <Link
+                to="/services"
+                className={`nav-dropdown-trigger ${activePage === "services" ? "active" : ""}`}
+                onClick={closeMenus}
+                aria-expanded={servicesOpen}
+                aria-haspopup="true"
+              >
+                <span>Services</span>
+              </Link>
+              <button
+                type="button"
+                className="mobile-accordion-toggle"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setServicesOpen((prev) => !prev);
+                }}
+                aria-label={servicesOpen ? "Collapse services" : "Expand services"}
+              >
+                <ChevronDown
+                  size={15}
+                  className={`dropdown-arrow ${servicesOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+            </div>
 
             {/* Desktop Dropdown Menu */}
             <div
