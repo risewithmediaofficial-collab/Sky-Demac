@@ -1,6 +1,7 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { business } from "./src/config.ts";
+import { business } from "./src/config.js";
 
 const escapeHtml = (value) =>
   String(value).replace(
@@ -14,6 +15,7 @@ const escapeHtml = (value) =>
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     react(),
     {
       name: "business-metadata",
