@@ -232,16 +232,6 @@ export default function FoldingHero() {
           <img src="/images/iphone-fold-template-overlay.webp" alt="iPhone Fold presentation template" className="iphone-template-overlay-img" aria-hidden="true"/>
         </div>
 
-        {/* Floating Pricing Callout (Apple Style Reference) */}
-        <div className={`hero-floating-callout ${activeIndex !== 0 ? "callout-subdued" : ""}`} aria-label="Automotive care purchase options">
-          <div className="floating-callout-text">
-            <span className="floating-callout-price">Complete Automotive Care · From ₹2,499</span>
-            <span className="floating-callout-sub">Multi-point diagnostic & bespoke studio care</span>
-          </div>
-          <Link to="/contact" className="floating-callout-pill">
-            Enquire Now <ChevronRight size={13}/>
-          </Link>
-        </div>
 
         {/* Zig-Zag Alternating Plain Captions (Left & Right) */}
         <div className="cinema-copy-layer">
