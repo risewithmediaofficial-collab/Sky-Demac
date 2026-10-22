@@ -6,7 +6,7 @@ import { BrandStrip, ServicesSection } from "../components/sections";
 
 /**
  * SKY DEMAC Homepage
- * Features the signature 3D cinema folding hero animation,
+ * Features the signature cinema hero animation,
  * brand strip, and the services provided section.
  */
 export default function HomePage() {

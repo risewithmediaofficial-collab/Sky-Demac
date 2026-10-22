@@ -390,17 +390,12 @@ section:focus {
 .navigation a.active {
   font-weight: 600;
   color: var(--color-brand-red, #dc2626);
+  text-decoration: none !important;
 }
 
 .navigation a.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--color-brand-red, #dc2626);
-  border-radius: 9999px;
+  display: none !important;
+  content: none !important;
 }
 
 .nav-cta {
@@ -4237,37 +4232,34 @@ svg {
 .fold-phone-panel {
   position: absolute;
   top: 0;
-  width: 50.15%;
+  width: 50%;
   height: 100%;
   padding: clamp(8px, 0.72vw, 12px);
-  background: linear-gradient(145deg, #868b92 0%, #17191c 9%, #030405 48%, #383c42 88%, #aeb3b9 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.5), inset 0 0 0 3px rgba(0,0,0,.76), 0 24px 55px rgba(14,18,24,.24);
+  background: linear-gradient(145deg, #42464b 0%, #17191d 18%, #08090b 50%, #202328 85%, #60646c 100%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
+  box-sizing: border-box;
 }
 
 .fold-phone-left {
   left: 0;
-  border-radius: clamp(28px, 2.5vw, 42px) 7px 7px clamp(28px, 2.5vw, 42px);
+  padding-right: 0 !important;
+  margin-right: -0.5px !important;
+  border-radius: clamp(28px, 2.5vw, 42px) 0 0 clamp(28px, 2.5vw, 42px) !important;
   transform-origin: right center;
   transform: rotateY(var(--phone-angle));
   z-index: 3;
   will-change: transform;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(255,255,255,.15) !important;
 }
 
 .fold-phone-right {
-  left: 49.85%;
-  border-radius: 7px clamp(28px, 2.5vw, 42px) clamp(28px, 2.5vw, 42px) 7px;
+  left: 50% !important;
+  padding-left: 0 !important;
+  border-radius: 0 clamp(28px, 2.5vw, 42px) clamp(28px, 2.5vw, 42px) 0 !important;
   z-index: 2;
-}
-
-.fold-phone[data-state="closed"] .fold-phone-right {
-  border-radius: clamp(28px, 2.5vw, 42px);
-}
-
-.fold-phone[data-state="closed"] .fold-phone-right .fold-phone-screen {
-  border-radius: clamp(21px, 1.9vw, 33px);
+  box-shadow: inset -1px 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(255,255,255,.15) !important;
 }
 
 .fold-phone-screen {
@@ -4276,15 +4268,19 @@ svg {
   height: 100%;
   overflow: hidden;
   background: #07090c;
-  border: 1px solid rgba(255,255,255,.13);
+  box-sizing: border-box;
 }
 
 .fold-phone-left .fold-phone-screen {
-  border-radius: clamp(21px, 1.9vw, 33px) 3px 3px clamp(21px, 1.9vw, 33px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: none !important;
+  border-radius: clamp(21px, 1.9vw, 33px) 0 0 clamp(21px, 1.9vw, 33px) !important;
 }
 
 .fold-phone-right .fold-phone-screen {
-  border-radius: 3px clamp(21px, 1.9vw, 33px) clamp(21px, 1.9vw, 33px) 3px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: none !important;
+  border-radius: 0 clamp(21px, 1.9vw, 33px) clamp(21px, 1.9vw, 33px) 0 !important;
 }
 
 .fold-phone-art-stack,
@@ -4306,36 +4302,21 @@ svg {
 .fold-phone-image {
   position: absolute;
   top: 0;
-  width: 200%;
-  max-width: none;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(var(--phone-blur));
-  will-change: filter;
+  width: 200% !important;
+  max-width: none !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  filter: blur(var(--phone-blur, 0px));
+  will-change: filter, transform;
 }
 
-.fold-phone-image-left { left: 0; object-position: center; }
-.fold-phone-image-right { right: 0; object-position: center; }
-
-.fold-phone-glare {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  background: linear-gradient(120deg, rgba(255,255,255,.16), transparent 25%, transparent 70%, rgba(255,255,255,.05));
-  opacity: var(--phone-glare);
-}
+.fold-phone-image-left { left: 0 !important; right: auto !important; }
+.fold-phone-image-right { left: -100% !important; right: auto !important; }
 
 .fold-phone-hinge {
-  position: absolute;
-  top: 3%;
-  bottom: 3%;
-  left: calc(50% - 3px);
-  width: 6px;
-  z-index: 6;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #070809, #73777d 48%, #101214);
-  box-shadow: 0 0 8px rgba(0,0,0,.48);
-  opacity: var(--phone-open);
+  display: none !important;
+  opacity: 0 !important;
 }
 
 .fold-phone-speaker,
@@ -4468,18 +4449,9 @@ svg {
   .site-header .nav-wrap { height: 60px; width: calc(100% - 20px); padding: 0 10px 0 16px; border-radius: 19px; }
   .site-header.menu-open { background: transparent; border-bottom-color: transparent; }
   .nav-cta { min-height: 36px; padding: 7px 13px; }
-  .cinema-caption { top: 86px; }
-  .fold-phone { top: 61%; width: min(760px, 94vw); }
 }
 
 @media (max-width: 640px) {
-  .fold-phone { top: 60%; width: 94vw; }
-  .fold-phone-panel { padding: 6px; }
-  .fold-phone-left { border-radius: 24px 5px 5px 24px; }
-  .fold-phone-right { border-radius: 5px 24px 24px 5px; }
-  .fold-phone-left .fold-phone-screen { border-radius: 18px 2px 2px 18px; }
-  .fold-phone-right .fold-phone-screen { border-radius: 2px 18px 18px 2px; }
-  .cinema-bottom { bottom: 12px; }
   .cinema-disclosure { display: none; }
 }
 
@@ -4796,11 +4768,6 @@ footer strong {
   .mobile-accordion-toggle {
     color: #ffffff;
   }
-
-  .cinema-caption {
-    border-radius: 20px;
-    background: rgba(11,11,11,.8);
-  }
 }
 
 /* Final glass cascade: keeps legacy component rules from restoring opaque fills. */
@@ -5060,10 +5027,21 @@ textarea {
   padding: 0;
 }
 
-.site-header .navigation a.active::after {
-  left: 18px;
-  right: 18px;
-  bottom: 7px;
+.site-header .navigation a.active::after,
+.site-header .nav-dropdown-trigger.active::after {
+  display: none !important;
+  content: none !important;
+}
+
+.site-header .navigation a.active,
+.site-header .nav-dropdown-trigger.active {
+  text-decoration: none !important;
+  color: #e31e24 !important;
+}
+
+.site-header .nav-dropdown-head:has(.active) {
+  border-color: rgba(227, 30, 36, 0.45) !important;
+  background: rgba(227, 30, 36, 0.08) !important;
 }
 
 .site-header .nav-cta {
@@ -6288,4 +6266,364 @@ textarea {
     padding: 24px 0 48px;
   }
 }
+
+/* =====================================================
+   SEAMLESS IPHONE FOLD 3D SHOWCASE ENGINE
+   - Authentic 3D Phone Unfold animation on scroll
+   - 100% Blended car visual across both panels (ZERO cut mark)
+   - Zero hinge line shadow when open
+   - Full Mobile Responsiveness & buttery smooth scroll flow
+   ===================================================== */
+
+.fold-phone {
+  position: absolute;
+  left: 50%;
+  top: 51%;
+  width: clamp(560px, 52vw, 820px);
+  aspect-ratio: 1.78 / 1;
+  z-index: 3;
+  transform: translate(-50%, -50%) translateX(var(--phone-shift)) scale(var(--phone-scale));
+  transform-style: preserve-3d;
+  perspective: 1800px;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* Left & Right Panels meet at 50% with zero gap */
+.fold-phone-panel {
+  position: absolute;
+  top: 0;
+  width: 50.15%;
+  height: 100%;
+  padding: clamp(8px, 0.72vw, 12px);
+  background: linear-gradient(145deg, #42464b 0%, #17191d 18%, #08090b 50%, #202328 85%, #60646c 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    inset 0 0 0 2.5px rgba(0, 0, 0, 0.85),
+    0 24px 60px rgba(0, 0, 0, 0.5);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  box-sizing: border-box;
+}
+
+.fold-phone-left {
+  left: 0;
+  padding-right: 0 !important;
+  margin-right: -0.5px !important;
+  border-radius: clamp(28px, 2.5vw, 42px) 0 0 clamp(28px, 2.5vw, 42px) !important;
+  transform-origin: right center;
+  transform: rotateY(var(--phone-angle));
+  z-index: 3;
+  will-change: transform;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(255,255,255,.15) !important;
+}
+
+.fold-phone-right {
+  left: 50% !important;
+  padding-left: 0 !important;
+  border-radius: 0 clamp(28px, 2.5vw, 42px) clamp(28px, 2.5vw, 42px) 0 !important;
+  z-index: 2;
+  box-shadow: inset -1px 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(255,255,255,.15) !important;
+}
+
+/* Zero cut mark: the screens meet flush at center */
+.fold-phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #07090c;
+  box-sizing: border-box;
+}
+
+.fold-phone-left .fold-phone-screen {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: none !important;
+  border-radius: clamp(21px, 1.9vw, 33px) 0 0 clamp(21px, 1.9vw, 33px) !important;
+}
+
+.fold-phone-right .fold-phone-screen {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: none !important;
+  border-radius: 0 clamp(21px, 1.9vw, 33px) clamp(21px, 1.9vw, 33px) 0 !important;
+}
+
+/* ZERO CUT MARK: Exact subpixel percentage alignment across both halves */
+.fold-phone-image {
+  position: absolute;
+  top: 0;
+  width: 200% !important;
+  max-width: none !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  filter: blur(var(--phone-blur, 0px));
+  will-change: filter, transform;
+}
+
+.fold-phone-image-left {
+  left: 0 !important;
+  right: auto !important;
+}
+
+.fold-phone-image-right {
+  left: -100% !important;
+  right: auto !important;
+}
+
+/* Hinge: subtle crease during fold, disappears completely when open */
+.fold-phone-hinge {
+  position: absolute;
+  top: 2.5%;
+  bottom: 2.5%;
+  left: calc(50% - 0.5px);
+  width: 1px;
+  z-index: 6;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.2) 50%, rgba(255,255,255,0.06));
+  pointer-events: none;
+  opacity: calc((1 - var(--phone-open, 1)) * 0.6);
+  transition: opacity 0.2s ease;
+  box-shadow: none !important;
+}
+
+.fold-phone[data-state="open"] .fold-phone-hinge {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  display: none !important;
+}
+
+/* Chapter switcher dots */
+.cinema-chapter-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chapter-dot {
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--font-text);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chapter-dot:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.chapter-dot.is-active {
+  background: #e31e24;
+  border-color: #e31e24;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(227, 30, 36, 0.5);
+}
+
+/* Cinema Captions Placement */
+.cinema-caption {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(420px, 32vw);
+  max-width: 440px;
+  z-index: 5;
+  pointer-events: auto;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.cinema-caption-left {
+  left: max(48px, calc(50vw - 640px));
+  right: auto;
+  text-align: left;
+}
+
+.cinema-caption-right {
+  right: max(48px, calc(50vw - 640px));
+  left: auto;
+  text-align: left;
+}
+
+/* Mobile & Tablet Responsiveness (<= 900px) */
+@media (max-width: 900px) {
+  .cinema-stage {
+    min-height: 100svh;
+    height: 100svh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .cinema-caption {
+    top: 74px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: min(92vw, 420px) !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    z-index: 6 !important;
+    pointer-events: auto !important;
+  }
+
+  .cinema-caption .caption-plain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .cinema-caption .modern-pill-badge {
+    margin-bottom: 6px !important;
+    font-size: 10.5px !important;
+    padding: 4px 11px !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .cinema-caption .modern-display-heading {
+    font-size: clamp(22px, 6.2vw, 28px) !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 6px !important;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .cinema-caption .cinema-support {
+    font-size: clamp(12px, 3.4vw, 13.5px) !important;
+    line-height: 1.4 !important;
+    color: rgba(255, 255, 255, 0.72) !important;
+    max-width: 32ch !important;
+    margin: 0 auto 10px auto !important;
+    text-align: center !important;
+  }
+
+  .cinema-caption .cinema-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .cinema-caption .cinema-actions .button,
+  .cinema-caption .cinema-actions .button-primary {
+    font-size: 12px !important;
+    padding: 7px 15px !important;
+    min-height: 36px !important;
+    border-radius: 99px !important;
+  }
+
+  .cinema-caption .cinema-actions .cinema-secondary {
+    font-size: 12px !important;
+    padding: 7px 13px !important;
+    min-height: 36px !important;
+    border-radius: 99px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #ffffff !important;
+  }
+
+  .fold-phone {
+    left: 50% !important;
+    top: 61% !important;
+    transform: translate(-50%, -50%) scale(var(--phone-scale)) !important;
+    width: min(90vw, 370px) !important;
+    aspect-ratio: 1.78 / 1 !important;
+    pointer-events: none !important;
+  }
+
+  .cinema-bottom {
+    bottom: 74px !important;
+    padding: 0 16px !important;
+    z-index: 5 !important;
+  }
+
+  .cinema-skip {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .cinema-caption {
+    top: 70px !important;
+    width: min(94vw, 360px) !important;
+  }
+
+  .cinema-caption .modern-display-heading {
+    font-size: clamp(20px, 5.8vw, 25px) !important;
+  }
+
+  .fold-phone {
+    top: 62% !important;
+    width: min(92vw, 340px) !important;
+  }
+
+  .fold-phone-panel {
+    padding: 5px !important;
+  }
+
+  .fold-phone-left {
+    padding-right: 0 !important;
+    margin-right: -0.5px !important;
+    border-radius: 20px 0 0 20px !important;
+  }
+
+  .fold-phone-right {
+    padding-left: 0 !important;
+    border-radius: 0 20px 20px 0 !important;
+  }
+
+  .fold-phone-left .fold-phone-screen {
+    border-radius: 14px 0 0 14px !important;
+  }
+
+  .fold-phone-right .fold-phone-screen {
+    border-radius: 0 14px 14px 0 !important;
+  }
+
+  .cinema-bottom {
+    bottom: 70px !important;
+  }
+}
+
+@media (max-height: 680px) and (max-width: 900px) {
+  .cinema-caption {
+    top: 62px !important;
+  }
+  .cinema-caption .modern-display-heading {
+    font-size: 19px !important;
+    margin-bottom: 3px !important;
+  }
+  .cinema-caption .cinema-support {
+    display: none !important;
+  }
+  .fold-phone {
+    top: 63% !important;
+    width: min(84vw, 300px) !important;
+  }
+}
+
 
