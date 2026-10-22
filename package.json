@@ -1,33 +1,15 @@
 {
-  "name": "sky",
+  "name": "sky-demac-workspace",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "SKY DEMAC AUTOMOTIVE - Official Web Experience & Brand Platform",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "lint": "npm --prefix frontend run lint"
   },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "gsap": "^3.13.0",
-    "lenis": "^1.3.27",
-    "lucide-react": "^0.468.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.4",
-    "tailwindcss": "^4.3.3"
-  },
-  "devDependencies": {
-    "@fontsource-variable/inter": "^5.3.0",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.7",
-    "@vitejs/plugin-react": "^6.1.1",
-    "oxlint": "^1.81.0",
-    "prettier": "^3.9.10",
-    "sharp": "^0.35.5",
-    "typescript": "^5.9.3",
-    "vite": "^8.3.0"
-  }
+  "workspaces": [
+    "frontend"
+  ]
 }

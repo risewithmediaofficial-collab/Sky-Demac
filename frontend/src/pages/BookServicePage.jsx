@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Mail, MapPin, Phone, ShieldCheck, Sparkles, } from "lucide-react";
 import { business } from "../config";
-import EnquiryForm from "../components/EnquiryForm";
+import { EnquiryForm } from "../components/forms";
 export default function BookServicePage() {
     const [searchParams] = useSearchParams();
     const preselectedCategory = searchParams.get("category");

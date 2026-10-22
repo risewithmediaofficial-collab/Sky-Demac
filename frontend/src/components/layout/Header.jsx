@@ -21,7 +21,7 @@ import Wordmark from "../common/Wordmark";
 /**
  * Maps category IDs to corresponding Lucide icons
  */
-export function getCategoryNavIcon(id) {
+function getCategoryNavIcon(id) {
   switch (id) {
     case "mechanical":
       return <Wrench size={16} />;

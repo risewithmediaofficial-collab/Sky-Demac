@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, ShieldCheck, CheckCircle2, CalendarCheck, Wrench, Sparkles, Car, Layers, Cpu, CircleDot, Zap, Gauge, } from "lucide-react";
 import { business } from "../config";
-import SafeImage from "../components/SafeImage";
+import { SafeImage } from "../components/common";
 const getCategoryIcon = (id) => {
     switch (id) {
         case "mechanical":

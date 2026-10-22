@@ -1,13 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { business } from "./config";
-import Layout from "./components/layout/Layout";
-import SmoothScroll from "./components/common/SmoothScroll";
-import HomePage from "./pages/HomePage";
-import ServicesOverviewPage from "./pages/ServicesOverviewPage";
-import ServicePage from "./pages/ServicePage";
-import GalleryPage from "./pages/GalleryPage";
-import BookServicePage from "./pages/BookServicePage";
-import AboutPage from "./pages/AboutPage";
+import { Layout } from "./components/layout";
+import { SmoothScroll } from "./components/common";
+import {
+  HomePage,
+  ServicesOverviewPage,
+  ServicePage,
+  GalleryPage,
+  BookServicePage,
+  AboutPage,
+} from "./pages";
 
 /**
  * Root Application Component

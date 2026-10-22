@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, CheckCircle2, ShieldCheck, Wrench, Sparkles, Car, Layers, Cpu, CircleDot, Zap, Gauge, PhoneCall, CalendarCheck, } from "lucide-react";
 import { business } from "../config";
-import SafeImage from "../components/SafeImage";
+import { SafeImage } from "../components/common";
 // Icon mapping helper for visual cards
 const getCategoryIcon = (id) => {
     switch (id) {

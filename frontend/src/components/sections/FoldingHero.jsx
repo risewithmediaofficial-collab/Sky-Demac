@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowDown, ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { isServiceActive } from "../config";
-import SafeImage from "./SafeImage";
+import { isServiceActive } from "../../config";
+import SafeImage from "../common/SafeImage";
 
 const protectionEnabled = ["ppf", "ceramic-coating", "specialised-coating"].some(isServiceActive);
 const scenes = [

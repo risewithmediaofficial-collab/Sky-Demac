@@ -1,6 +1,6 @@
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { business } from "../../config";
-import EnquiryForm from "../EnquiryForm";
+import EnquiryForm from "../forms/EnquiryForm";
 
 /**
  * Direct Contact & Enquiry Section

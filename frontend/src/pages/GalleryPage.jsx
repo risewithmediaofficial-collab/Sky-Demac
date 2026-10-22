@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Sparkles, CalendarCheck } from "lucide-react";
 import { business } from "../config";
-import SafeImage from "../components/SafeImage";
+import { SafeImage } from "../components/common";
 function Comparison() {
     const [value, setValue] = useState(50);
     const comparison = business.comparison;

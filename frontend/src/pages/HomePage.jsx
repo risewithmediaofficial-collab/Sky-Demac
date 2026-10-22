@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { business } from "../config";
-import { useSectionReveals } from "../hooks/useSectionReveals";
-import FoldingHero from "../components/FoldingHero";
-import { BrandStrip, ServicesSection } from "../components/sections";
+import { useSectionReveals } from "../hooks";
+import { FoldingHero, BrandStrip, ServicesSection } from "../components/sections";
 
 /**
  * SKY DEMAC Homepage

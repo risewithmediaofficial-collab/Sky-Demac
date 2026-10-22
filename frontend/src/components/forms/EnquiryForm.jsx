@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { ArrowUpRight, Check, Copy, MessageCircle } from "lucide-react";
-import { business, confirmedServices, whatsappNumber } from "../config";
+import { business, confirmedServices, whatsappNumber } from "../../config";
 const initial = {
     name: "",
     mobile: "",
