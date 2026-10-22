@@ -6616,4 +6616,232 @@ textarea {
   }
 }
 
+/* =====================================================
+   SIDE-SCROLL INTERACTIVE HERO & HORIZONTAL CONTROLS
+   ===================================================== */
+.cinema-story.is-side-scroll {
+  height: 100svh;
+  min-height: 600px;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.cinema-story.is-side-scroll.is-dragging {
+  cursor: grabbing;
+}
+
+/* Floating Side Navigation Buttons (Left & Right) */
+.hero-side-btn {
+  position: absolute;
+  top: 52%;
+  transform: translateY(-50%);
+  z-index: 12;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(18, 21, 26, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 12px rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.hero-side-btn-prev {
+  left: max(20px, calc(50vw - 680px));
+}
+
+.hero-side-btn-next {
+  right: max(20px, calc(50vw - 680px));
+}
+
+.hero-side-btn:hover:not(:disabled) {
+  background: #e31e24;
+  border-color: #e31e24;
+  transform: translateY(-50%) scale(1.12);
+  box-shadow: 0 8px 30px rgba(227, 30, 36, 0.65), 0 0 20px rgba(227, 30, 36, 0.4);
+}
+
+.hero-side-btn:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.hero-side-btn.is-disabled,
+.hero-side-btn:disabled {
+  opacity: 0.22;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Pulsing wave on Next button at Chapter 0 to beckon user */
+.side-btn-pulse-wave {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid #e31e24;
+  animation: sideBtnPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes sideBtnPulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+/* Prominent Side-Scroll Indication Badge */
+.hero-side-scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+.hero-side-scroll-hint.is-subtle {
+  opacity: 0.52;
+}
+
+.hero-side-scroll-hint:hover {
+  opacity: 1 !important;
+  transform: translateX(-50%) scale(1.03);
+}
+
+.hint-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 18px;
+  background: rgba(17, 20, 26, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 99px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(227, 30, 36, 0.25);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+.hint-chevron {
+  color: #e31e24;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hint-chevron-left {
+  animation: hintNudgeLeft 1.6s ease-in-out infinite;
+}
+
+.hint-chevron-right {
+  animation: hintNudgeRight 1.6s ease-in-out infinite;
+}
+
+@keyframes hintNudgeLeft {
+  0%, 100% { transform: translateX(0); opacity: 0.7; }
+  50% { transform: translateX(-4px); opacity: 1; }
+}
+
+@keyframes hintNudgeRight {
+  0%, 100% { transform: translateX(0); opacity: 0.7; }
+  50% { transform: translateX(4px); opacity: 1; }
+}
+
+.hint-icon-wrap {
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: hintIconSway 2.4s ease-in-out infinite;
+}
+
+@keyframes hintIconSway {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-3px) rotate(-6deg); }
+  75% { transform: translateX(3px) rotate(6deg); }
+}
+
+.hint-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.hint-label-desktop {
+  display: inline;
+}
+
+.hint-label-mobile {
+  display: none;
+}
+
+/* Mobile & Tablet Responsiveness for Side Scroll Controls */
+@media (max-width: 900px) {
+  .hint-label-desktop {
+    display: none;
+  }
+  .hint-label-mobile {
+    display: inline;
+  }
+
+  .hero-side-btn {
+    width: 40px;
+    height: 40px;
+    top: 56%;
+  }
+
+  .hero-side-btn-prev {
+    left: 8px;
+  }
+
+  .hero-side-btn-next {
+    right: 8px;
+  }
+
+  .hero-side-scroll-hint {
+    bottom: 122px;
+  }
+
+  .hint-pill {
+    padding: 6px 14px;
+    gap: 7px;
+  }
+
+  .hint-label {
+    font-size: 10px;
+    letter-spacing: 0.09em;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-side-scroll-hint {
+    bottom: 118px;
+  }
+
+  .hero-side-btn {
+    width: 38px;
+    height: 38px;
+    background: rgba(14, 16, 20, 0.9);
+  }
+}
+
+
 

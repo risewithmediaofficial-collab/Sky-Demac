@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { isServiceActive } from "../../config";
 import SafeImage from "../common/SafeImage";
 
@@ -16,7 +14,10 @@ const scenes = [
 ];
 
 const clamp = (value) => Math.max(0, Math.min(1, value));
-const ease = (value) => { const n = clamp(value); return n * n * (3 - 2 * n); };
+const ease = (value) => {
+  const n = clamp(value);
+  return n * n * (3 - 2 * n);
+};
 
 function PanelArt({ side }) {
   return (
@@ -71,76 +72,236 @@ function Caption({ index }) {
 
 export default function FoldingHero() {
   const sectionRef = useRef(null);
-  const [animated, setAnimated] = useState(false);
+  const stageRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
-  const handleChapterClick = (idx) => {
-    setActiveIndex(idx);
-    if (sectionRef.current) {
-      const stage = sectionRef.current.querySelector(".cinema-stage");
-      const isMobile = window.innerWidth <= 768;
-      const multiplier = isMobile ? 3.0 : 3.5;
-      const pinDistance = (stage?.clientHeight || window.innerHeight) * multiplier;
-      const unfoldEnd = 0.22;
-      const storyEnd = 0.85;
-      const chapterTarget = idx / (scenes.length - 1);
-      const targetScroll =
-        sectionRef.current.offsetTop +
-        unfoldEnd * pinDistance +
-        chapterTarget * ((storyEnd - unfoldEnd) * pinDistance);
+  // Animation & Physics Engine Refs
+  const currentProgressRef = useRef(0);
+  const targetProgressRef = useRef(0);
+  const lastActiveRef = useRef(-1);
+  const hasInteractedRef = useRef(false);
 
-      if (window.__lenis) {
-        window.__lenis.scrollTo(targetScroll, { duration: 0.9 });
-      } else {
-        window.scrollTo({ top: targetScroll, behavior: "smooth" });
+  // Gesture tracking
+  const isTouchActiveRef = useRef(false);
+  const isHorizSwipeRef = useRef(false);
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const lastTouchXRef = useRef(0);
+  const lastTouchTimeRef = useRef(0);
+  const velocityXRef = useRef(0);
+
+  const isMouseDraggingRef = useRef(false);
+  const mouseStartXRef = useRef(0);
+  const mouseStartProgressRef = useRef(0);
+  const lastMouseXRef = useRef(0);
+  const lastMouseTimeRef = useRef(0);
+
+  const artsBySceneRef = useRef([]);
+  const captionsRef = useRef([]);
+  const deviceRef = useRef(null);
+  const progressFillRef = useRef(null);
+
+  // Update interaction state
+  const markInteracted = useCallback(() => {
+    if (!hasInteractedRef.current) {
+      hasInteractedRef.current = true;
+      setHasInteracted(true);
+    }
+  }, []);
+
+  // Jump smoothly to a specific chapter (0 to 4)
+  const goToChapter = useCallback((idx) => {
+    markInteracted();
+    const clamped = Math.max(0, Math.min(scenes.length - 1, idx));
+    targetProgressRef.current = clamped / (scenes.length - 1);
+  }, [markInteracted]);
+
+  const handlePrev = useCallback(() => {
+    goToChapter(activeIndex - 1);
+  }, [activeIndex, goToChapter]);
+
+  const handleNext = useCallback(() => {
+    goToChapter(activeIndex + 1);
+  }, [activeIndex, goToChapter]);
+
+  // Handle snap on gesture end
+  const snapWithFlick = useCallback((velocity) => {
+    const numChapters = scenes.length;
+    const currentFraction = targetProgressRef.current * (numChapters - 1);
+    let targetChapter = Math.round(currentFraction);
+
+    // If flicked with sufficient momentum, advance or retreat
+    if (velocity < -0.32) {
+      targetChapter = Math.min(numChapters - 1, Math.floor(currentFraction) + 1);
+    } else if (velocity > 0.32) {
+      targetChapter = Math.max(0, Math.ceil(currentFraction) - 1);
+    }
+
+    goToChapter(targetChapter);
+  }, [goToChapter]);
+
+  // Touch gesture listeners (Mobile swipe)
+  const handleTouchStart = (e) => {
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+    lastTouchXRef.current = touch.clientX;
+    lastTouchTimeRef.current = performance.now();
+    mouseStartProgressRef.current = targetProgressRef.current;
+    isTouchActiveRef.current = true;
+    isHorizSwipeRef.current = false;
+    velocityXRef.current = 0;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isTouchActiveRef.current || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartXRef.current;
+    const dy = touch.clientY - touchStartYRef.current;
+
+    if (!isHorizSwipeRef.current) {
+      // Horizontal swipe detected
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+        isHorizSwipeRef.current = true;
+        markInteracted();
+      } else if (Math.abs(dy) > 10) {
+        // Vertical scroll: do not intercept, allow natural page scroll
+        isTouchActiveRef.current = false;
+        return;
       }
+    }
+
+    if (isHorizSwipeRef.current) {
+      if (e.cancelable) e.preventDefault(); // Lock page scroll while swiping sideways
+      const now = performance.now();
+      const dt = Math.max(1, now - lastTouchTimeRef.current);
+      velocityXRef.current = (touch.clientX - lastTouchXRef.current) / dt;
+      lastTouchXRef.current = touch.clientX;
+      lastTouchTimeRef.current = now;
+
+      const stageWidth = stageRef.current?.clientWidth || window.innerWidth;
+      // Moving 65% of screen width shifts 1 chapter
+      const progressDelta = -dx / (stageWidth * 0.85);
+      targetProgressRef.current = clamp(mouseStartProgressRef.current + progressDelta);
     }
   };
 
+  const handleTouchEnd = () => {
+    if (isHorizSwipeRef.current) {
+      snapWithFlick(velocityXRef.current);
+    }
+    isTouchActiveRef.current = false;
+    isHorizSwipeRef.current = false;
+  };
+
+  // Mouse drag listeners (Desktop horizontal drag)
+  const handleMouseDown = (e) => {
+    if (e.target.closest("button, a, input, select, textarea")) return;
+    isMouseDraggingRef.current = true;
+    mouseStartXRef.current = e.clientX;
+    mouseStartProgressRef.current = targetProgressRef.current;
+    lastMouseXRef.current = e.clientX;
+    lastMouseTimeRef.current = performance.now();
+    velocityXRef.current = 0;
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isMouseDraggingRef.current) return;
+    e.preventDefault();
+    markInteracted();
+    const dx = e.clientX - mouseStartXRef.current;
+    const now = performance.now();
+    const dt = Math.max(1, now - lastMouseTimeRef.current);
+    velocityXRef.current = (e.clientX - lastMouseXRef.current) / dt;
+    lastMouseXRef.current = e.clientX;
+    lastMouseTimeRef.current = now;
+
+    const stageWidth = stageRef.current?.clientWidth || window.innerWidth;
+    const progressDelta = -dx / (stageWidth * 0.95);
+    targetProgressRef.current = clamp(mouseStartProgressRef.current + progressDelta);
+  };
+
+  const handleMouseUp = () => {
+    if (isMouseDraggingRef.current) {
+      isMouseDraggingRef.current = false;
+      setIsDragging(false);
+      snapWithFlick(velocityXRef.current);
+    }
+  };
+
+  // Horizontal wheel / trackpad side-scroll (e.g. shift+wheel or two-finger trackpad horizontal gesture)
+  const handleWheel = (e) => {
+    // If horizontal scroll is present (deltaX) or Shift+Wheel is used
+    if (Math.abs(e.deltaX) > 4) {
+      e.preventDefault();
+      markInteracted();
+      const delta = e.deltaX * 0.0014;
+      targetProgressRef.current = clamp(targetProgressRef.current + delta);
+      snapWithFlick(-e.deltaX * 0.01);
+    } else if (e.shiftKey && Math.abs(e.deltaY) > 4) {
+      e.preventDefault();
+      markInteracted();
+      const delta = e.deltaY * 0.0014;
+      targetProgressRef.current = clamp(targetProgressRef.current + delta);
+      snapWithFlick(-e.deltaY * 0.01);
+    }
+    // If pure vertical scroll without shift key: do NOT preventDefault! Allow normal page scroll downwards.
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+      if (e.key === "ArrowRight") {
+        goToChapter(activeIndex + 1);
+      } else if (e.key === "ArrowLeft") {
+        goToChapter(activeIndex - 1);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeIndex, goToChapter]);
+
+  // Main 60fps/120fps render loop
   useEffect(() => {
     if (!sectionRef.current) return;
-    gsap.registerPlugin(ScrollTrigger);
-    ScrollTrigger.config({ ignoreMobileResize: true });
-
     const root = sectionRef.current;
-    const stage = root.querySelector(".cinema-stage");
-    const device = root.querySelector(".fold-phone");
-    const progressFill = root.querySelector(".cinema-progress-fill");
+    deviceRef.current = root.querySelector(".fold-phone");
+    progressFillRef.current = root.querySelector(".cinema-progress-fill");
 
-    // Group art images by scene index for fast batch updates
-    const artsByScene = scenes.map((_, i) => [
+    artsBySceneRef.current = scenes.map((_, i) => [
       ...root.querySelectorAll(`.fold-phone-art[data-art="${i}"]`),
     ]);
-    const captions = [...root.querySelectorAll(".cinema-caption")];
-    let lastActive = -1;
+    captionsRef.current = [...root.querySelectorAll(".cinema-caption")];
 
     const render = (rawProgress) => {
       const progress = clamp(rawProgress);
 
-      // 1. Phone unfolds during first 22% of pinned scroll
+      // Unfold phone during the transition from 0.0 to 0.22
+      // At 0: phone is folded at ~58deg
+      // At 0.22: phone is completely unfolded flat (0deg)
       const unfoldEnd = 0.22;
-      const open = ease(clamp(progress / unfoldEnd));
+      const unfoldFraction = clamp(progress / unfoldEnd);
+      const open = ease(unfoldFraction);
 
-      // 2. Chapters crossfade between 22% and 85%
-      // Leaving 85% to 100% as a locked resting plateau for Chapter 05
-      const storyEnd = 0.85;
-      const storyProgress = clamp((progress - unfoldEnd) / (storyEnd - unfoldEnd));
+      // Chapters crossfade between 0.0 and 1.0
       const numChapters = scenes.length;
-      const chapterSpan = storyProgress * (numChapters - 1);
-      const chapterIndex = Math.min(numChapters - 1, Math.floor(chapterSpan));
-      const chapterFraction = chapterSpan - chapterIndex;
+      const span = progress * (numChapters - 1);
+      const chapterIndex = Math.min(numChapters - 1, Math.floor(span));
+      const fraction = span - chapterIndex;
 
-      // In each chapter interval:
-      // First 45% (0.0 to 0.45) is a rock-solid pure hold of this scene (zero ghosting).
-      // Last 55% (0.45 to 1.0) is a smooth crossfade into the next scene.
-      const transitionStart = 0.45;
+      const transitionStart = 0.35;
       let active = chapterIndex;
       let next = chapterIndex;
       let blend = 0;
 
-      if (chapterFraction > transitionStart && chapterIndex < numChapters - 1) {
+      if (fraction > transitionStart && chapterIndex < numChapters - 1) {
         next = chapterIndex + 1;
-        const blendRaw = (chapterFraction - transitionStart) / (1 - transitionStart);
+        const blendRaw = (fraction - transitionStart) / (1 - transitionStart);
         blend = ease(blendRaw);
         if (blend >= 0.5) {
           active = next;
@@ -148,7 +309,7 @@ export default function FoldingHero() {
       }
 
       const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-      const maxAngle = isMobile ? 60 : 70;
+      const maxAngle = isMobile ? 54 : 64;
       const foldAngle = (1 - open) * maxAngle;
 
       root.style.setProperty("--phone-open", open.toFixed(4));
@@ -160,7 +321,7 @@ export default function FoldingHero() {
 
       // Layer switching: base is chapterIndex (zIndex 1), incoming is next (zIndex 2)
       for (let i = 0; i < scenes.length; i++) {
-        const artList = artsByScene[i];
+        const artList = artsBySceneRef.current[i];
         if (!artList) continue;
         let opacity = 0;
         let zIndex = 0;
@@ -178,63 +339,107 @@ export default function FoldingHero() {
       }
 
       // Update captions and React state only when active chapter changes
-      if (active !== lastActive) {
-        captions.forEach((caption, index) => {
+      if (active !== lastActiveRef.current) {
+        captionsRef.current.forEach((caption, index) => {
           const visible = index === active;
           caption.style.opacity = visible ? "1" : "0";
           caption.style.visibility = visible ? "visible" : "hidden";
         });
-        lastActive = active;
+        lastActiveRef.current = active;
         setActiveIndex(active);
       }
 
-      if (progressFill) {
-        progressFill.style.transform = `scaleX(${progress})`;
+      if (progressFillRef.current) {
+        progressFillRef.current.style.transform = `scaleX(${progress})`;
       }
 
-      if (device) {
+      if (deviceRef.current) {
         const state = open > 0.94 ? "open" : open < 0.04 ? "closed" : "opening";
-        if (device.dataset.state !== state) {
-          device.dataset.state = state;
+        if (deviceRef.current.dataset.state !== state) {
+          deviceRef.current.dataset.state = state;
         }
       }
     };
 
-    setAnimated(true);
+    // Initial render
     render(0);
 
-    // Pin with ScrollTrigger using synchronous scrub (zero latency delay)
-    // Completely solves the bug where below sections scrolled up prematurely!
-    const trigger = ScrollTrigger.create({
-      id: "sky-fold-open",
-      trigger: root,
-      start: "top top",
-      pin: stage,
-      pinSpacing: true,
-      end: () => `+=${stage.clientHeight * (window.innerWidth <= 768 ? 3.0 : 3.5)}`,
-      scrub: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => render(self.progress),
-    });
+    // Animation frame loop with smooth lerp
+    let animationFrameId;
+    const lerpFactor = 0.14;
 
-    const refresh = () => ScrollTrigger.refresh();
-    document.fonts.ready.then(refresh);
-    window.addEventListener("resize", refresh);
+    const loop = () => {
+      const diff = targetProgressRef.current - currentProgressRef.current;
+      if (Math.abs(diff) > 0.0003 || isTouchActiveRef.current || isMouseDraggingRef.current) {
+        currentProgressRef.current += diff * lerpFactor;
+        render(currentProgressRef.current);
+      }
+      animationFrameId = requestAnimationFrame(loop);
+    };
+
+    loop();
+
+    // Subtle teaser nudge after 800ms to invite side exploration if user has not interacted
+    const teaserTimer = setTimeout(() => {
+      if (!hasInteractedRef.current && targetProgressRef.current === 0) {
+        targetProgressRef.current = 0.07;
+        setTimeout(() => {
+          if (!hasInteractedRef.current && targetProgressRef.current === 0.07) {
+            targetProgressRef.current = 0;
+          }
+        }, 750);
+      }
+    }, 900);
 
     return () => {
-      window.removeEventListener("resize", refresh);
-      trigger.kill();
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(teaserTimer);
     };
   }, []);
 
   return (
-    <section id="home" ref={sectionRef} className={`cinema-story ${animated ? "is-animated" : ""}`} aria-label="SKY DEMAC automotive story">
-      <div className="cinema-stage">
+    <section
+      id="home"
+      ref={sectionRef}
+      className={`cinema-story is-animated is-side-scroll ${isDragging ? "is-dragging" : ""}`}
+      aria-label="SKY DEMAC interactive folding showcase"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onWheel={handleWheel}
+    >
+      <div className="cinema-stage" ref={stageRef}>
         <div className="hero-ambient hero-ambient-one" aria-hidden="true" />
         <div className="hero-ambient hero-ambient-two" aria-hidden="true" />
 
-        {/* Authentic iPhone Fold Showcase - Unfolds on Scroll with 100% Blended Screen */}
+        {/* Floating Side Navigation Buttons for Desktop & Mobile */}
+        <button
+          type="button"
+          className={`hero-side-btn hero-side-btn-prev ${activeIndex === 0 ? "is-disabled" : ""}`}
+          onClick={handlePrev}
+          disabled={activeIndex === 0}
+          aria-label="Previous chapter (fold phone)"
+          title="Previous chapter"
+        >
+          <ChevronLeft size={22} />
+        </button>
+
+        <button
+          type="button"
+          className={`hero-side-btn hero-side-btn-next ${activeIndex === scenes.length - 1 ? "is-disabled" : ""}`}
+          onClick={handleNext}
+          disabled={activeIndex === scenes.length - 1}
+          aria-label="Next chapter (unfold phone)"
+          title="Next chapter"
+        >
+          <ChevronRight size={22} />
+          {activeIndex === 0 && <span className="side-btn-pulse-wave" aria-hidden="true" />}
+        </button>
+
+        {/* Authentic iPhone Fold Showcase */}
         <div className="fold-phone" data-state="closed" aria-label="A folding phone opens to reveal automotive work">
           <div className="fold-phone-panel fold-phone-left">
             <div className="fold-phone-screen">
@@ -270,10 +475,41 @@ export default function FoldingHero() {
           ))}
         </div>
 
+        {/* Prominent Side-Scroll Indication for Mobile & Desktop */}
+        <div
+          className={`hero-side-scroll-hint ${hasInteracted ? "is-subtle" : ""}`}
+          onClick={handleNext}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNext(); }}
+          aria-label="Swipe or drag sideways to explore chapters"
+        >
+          <div className="hint-pill">
+            <span className="hint-chevron hint-chevron-left" aria-hidden="true">
+              <ChevronLeft size={15} />
+            </span>
+            <span className="hint-icon-wrap" aria-hidden="true">
+              <svg className="hint-swipe-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 11V6a2 2 0 0 0-4 0v5" />
+                <path d="M14 10V4a2 2 0 0 0-4 0v7" />
+                <path d="M10 10.5V6a2 2 0 0 0-4 0v8" />
+                <path d="M18 8a2 2 0 0 1 4 4v4a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 17" />
+              </svg>
+            </span>
+            <span className="hint-label">
+              <span className="hint-label-mobile">SWIPE SIDEWAYS TO EXPLORE</span>
+              <span className="hint-label-desktop">DRAG OR SCROLL SIDEWAYS TO EXPLORE</span>
+            </span>
+            <span className="hint-chevron hint-chevron-right" aria-hidden="true">
+              <ChevronRight size={15} />
+            </span>
+          </div>
+        </div>
+
         {/* Chapter Navigation Bar */}
         <div className="cinema-bottom">
           <a className="cinema-skip" href="#services">
-            Skip animation <ArrowDown size={14} />
+            Scroll to services <ArrowDown size={14} />
           </a>
           <div className="cinema-chapter">
             <span className="cinema-chapter-number">0{activeIndex + 1}</span>
@@ -290,7 +526,7 @@ export default function FoldingHero() {
                 key={s.id}
                 type="button"
                 className={`chapter-dot ${activeIndex === idx ? "is-active" : ""}`}
-                onClick={() => handleChapterClick(idx)}
+                onClick={() => goToChapter(idx)}
                 aria-label={`Jump to chapter ${idx + 1}: ${s.label}`}
               >
                 0{idx + 1}
@@ -299,7 +535,18 @@ export default function FoldingHero() {
           </div>
         </div>
 
-        <div className="cinema-progress" aria-hidden="true">
+        {/* Interactive Progress Bar */}
+        <div
+          className="cinema-progress"
+          aria-hidden="true"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickFraction = (e.clientX - rect.left) / rect.width;
+            const targetChapter = Math.round(clickFraction * (scenes.length - 1));
+            goToChapter(targetChapter);
+          }}
+          title="Click to seek"
+        >
           <span className="cinema-progress-fill" style={{ transform: `scaleX(${(activeIndex + 1) / scenes.length})` }} />
         </div>
       </div>
