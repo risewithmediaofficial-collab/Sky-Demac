@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowUpRight, ChevronRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isServiceActive } from "../config";
 import SafeImage from "./SafeImage";
 
@@ -27,6 +29,7 @@ function PanelArt({ side }) {
             alt=""
             width="1805"
             height="871"
+            loading={index <= 1 ? "eager" : "lazy"}
             fetchPriority={index === 0 ? "high" : "auto"}
             decoding="async"
           />
@@ -76,123 +79,152 @@ export default function FoldingHero() {
     if (sectionRef.current) {
       const stage = sectionRef.current.querySelector(".cinema-stage");
       const isMobile = window.innerWidth <= 768;
-      const multiplier = isMobile ? 1.8 : 2.4;
+      const multiplier = isMobile ? 3.0 : 3.5;
       const pinDistance = (stage?.clientHeight || window.innerHeight) * multiplier;
-      const unfoldEnd = 0.3;
-      const targetScroll = sectionRef.current.offsetTop + unfoldEnd * pinDistance + (idx / (scenes.length - 1)) * (pinDistance * (1 - unfoldEnd));
-      window.scrollTo({ top: targetScroll, behavior: "smooth" });
+      const unfoldEnd = 0.22;
+      const storyEnd = 0.85;
+      const chapterTarget = idx / (scenes.length - 1);
+      const targetScroll =
+        sectionRef.current.offsetTop +
+        unfoldEnd * pinDistance +
+        chapterTarget * ((storyEnd - unfoldEnd) * pinDistance);
+
+      if (window.__lenis) {
+        window.__lenis.scrollTo(targetScroll, { duration: 0.9 });
+      } else {
+        window.scrollTo({ top: targetScroll, behavior: "smooth" });
+      }
     }
   };
 
   useEffect(() => {
-    let disposed = false;
-    let cleanup;
+    if (!sectionRef.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
-      if (disposed || !sectionRef.current) return;
-      gsap.registerPlugin(ScrollTrigger);
-      const root = sectionRef.current;
-      const stage = root.querySelector(".cinema-stage");
-      const device = root.querySelector(".fold-phone");
-      const arts = [...root.querySelectorAll(".fold-phone-art")];
-      const captions = [...root.querySelectorAll(".cinema-caption")];
-      const progressFill = root.querySelector(".cinema-progress-fill");
-      let lastActive = -1;
+    const root = sectionRef.current;
+    const stage = root.querySelector(".cinema-stage");
+    const device = root.querySelector(".fold-phone");
+    const progressFill = root.querySelector(".cinema-progress-fill");
 
-      const render = (rawProgress) => {
-        const progress = clamp(rawProgress);
-        // Unfolding completes during first 30% of scroll
-        const unfoldEnd = 0.3;
-        const open = ease(clamp(progress / unfoldEnd));
-        
-        // Chapter crossfades start ONLY after phone is open
-        const storyProgress = clamp((progress - unfoldEnd) / (1 - unfoldEnd));
-        const chapterPosition = storyProgress * (scenes.length - 1);
-        const active = Math.min(scenes.length - 1, Math.floor(chapterPosition));
-        const local = chapterPosition - active;
-        const next = Math.min(scenes.length - 1, active + 1);
-        const blend = active === next ? 0 : ease(local);
+    // Group art images by scene index for fast batch updates
+    const artsByScene = scenes.map((_, i) => [
+      ...root.querySelectorAll(`.fold-phone-art[data-art="${i}"]`),
+    ]);
+    const captions = [...root.querySelectorAll(".cinema-caption")];
+    let lastActive = -1;
 
-        const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-        const maxAngle = isMobile ? 60 : 70;
-        const foldAngle = (1 - open) * maxAngle;
+    const render = (rawProgress) => {
+      const progress = clamp(rawProgress);
 
-        root.style.setProperty("--phone-open", open.toFixed(4));
-        root.style.setProperty("--phone-angle", `${foldAngle.toFixed(2)}deg`);
-        root.style.setProperty("--phone-blur", `${(1 - open) * 4}px`);
-        root.style.setProperty("--phone-scale", (0.88 + open * 0.12).toFixed(4));
-        root.style.setProperty("--phone-shift", isMobile ? "0%" : `${(1 - open) * -16}%`);
-        root.style.setProperty("--phone-glare", (0.35 - open * 0.35).toFixed(4));
-        root.style.setProperty("--phone-shadow-alpha", (0.32 + open * 0.38).toFixed(4));
-        root.style.setProperty("--phone-shadow-scale", (0.72 + open * 0.28).toFixed(4));
-        root.style.setProperty("--hero-copy-in", (0.9 + open * 0.1).toFixed(4));
+      // 1. Phone unfolds during first 22% of pinned scroll
+      const unfoldEnd = 0.22;
+      const open = ease(clamp(progress / unfoldEnd));
 
-        arts.forEach((art) => {
-          const index = Number(art.dataset.art);
-          let opacity = 0;
-          let zIndex = 0;
-          if (index === active) {
-            opacity = 1;
-            zIndex = 1;
-          } else if (index === next && blend > 0.02) {
-            opacity = blend;
-            zIndex = 2;
-          }
-          art.style.opacity = String(opacity);
-          art.style.zIndex = String(zIndex);
-        });
+      // 2. Chapters crossfade between 22% and 85%
+      // Leaving 85% to 100% as a locked resting plateau for Chapter 05
+      const storyEnd = 0.85;
+      const storyProgress = clamp((progress - unfoldEnd) / (storyEnd - unfoldEnd));
+      const numChapters = scenes.length;
+      const chapterSpan = storyProgress * (numChapters - 1);
+      const chapterIndex = Math.min(numChapters - 1, Math.floor(chapterSpan));
+      const chapterFraction = chapterSpan - chapterIndex;
 
+      // In each chapter interval:
+      // First 45% (0.0 to 0.45) is a rock-solid pure hold of this scene (zero ghosting).
+      // Last 55% (0.45 to 1.0) is a smooth crossfade into the next scene.
+      const transitionStart = 0.45;
+      let active = chapterIndex;
+      let next = chapterIndex;
+      let blend = 0;
+
+      if (chapterFraction > transitionStart && chapterIndex < numChapters - 1) {
+        next = chapterIndex + 1;
+        const blendRaw = (chapterFraction - transitionStart) / (1 - transitionStart);
+        blend = ease(blendRaw);
+        if (blend >= 0.5) {
+          active = next;
+        }
+      }
+
+      const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+      const maxAngle = isMobile ? 60 : 70;
+      const foldAngle = (1 - open) * maxAngle;
+
+      root.style.setProperty("--phone-open", open.toFixed(4));
+      root.style.setProperty("--phone-angle", `${foldAngle.toFixed(2)}deg`);
+      root.style.setProperty("--phone-scale", (0.88 + open * 0.12).toFixed(4));
+      root.style.setProperty("--phone-shift", isMobile ? "0%" : `${(1 - open) * -16}%`);
+      root.style.setProperty("--phone-shadow-alpha", (0.32 + open * 0.38).toFixed(4));
+      root.style.setProperty("--phone-shadow-scale", (0.72 + open * 0.28).toFixed(4));
+
+      // Layer switching: base is chapterIndex (zIndex 1), incoming is next (zIndex 2)
+      for (let i = 0; i < scenes.length; i++) {
+        const artList = artsByScene[i];
+        if (!artList) continue;
+        let opacity = 0;
+        let zIndex = 0;
+        if (i === chapterIndex) {
+          opacity = 1;
+          zIndex = 1;
+        } else if (i === next && blend > 0.01) {
+          opacity = blend;
+          zIndex = 2;
+        }
+        for (let j = 0; j < artList.length; j++) {
+          artList[j].style.opacity = String(opacity);
+          artList[j].style.zIndex = String(zIndex);
+        }
+      }
+
+      // Update captions and React state only when active chapter changes
+      if (active !== lastActive) {
         captions.forEach((caption, index) => {
           const visible = index === active;
           caption.style.opacity = visible ? "1" : "0";
           caption.style.visibility = visible ? "visible" : "hidden";
         });
+        lastActive = active;
+        setActiveIndex(active);
+      }
 
-        if (active !== lastActive) {
-          lastActive = active;
-          setActiveIndex(active);
-        }
-        if (progressFill) {
-          progressFill.style.transform = `scaleX(${progress})`;
-        }
-        if (device) {
-          device.dataset.state = open > 0.94 ? "open" : open < 0.04 ? "closed" : "opening";
-        }
-      };
+      if (progressFill) {
+        progressFill.style.transform = `scaleX(${progress})`;
+      }
 
-      setAnimated(true);
-      render(0);
-      const cursor = { progress: 0 };
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: "sky-fold-open",
-          trigger: root,
-          start: "top top",
-          pin: stage,
-          end: () => `+=${stage.clientHeight * (window.innerWidth <= 768 ? 1.8 : 2.4)}`,
-          scrub: 0.8,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-        onUpdate: () => render(cursor.progress),
-      });
-      timeline.to(cursor, { progress: 1, duration: 1, ease: "none" });
+      if (device) {
+        const state = open > 0.94 ? "open" : open < 0.04 ? "closed" : "opening";
+        if (device.dataset.state !== state) {
+          device.dataset.state = state;
+        }
+      }
+    };
 
-      const refresh = () => ScrollTrigger.refresh();
-      document.fonts.ready.then(refresh);
-      window.addEventListener("resize", refresh);
-      cleanup = () => {
-        window.removeEventListener("resize", refresh);
-        timeline.scrollTrigger?.kill();
-        timeline.kill();
-      };
-    }).catch(() => {
-      setAnimated(true);
+    setAnimated(true);
+    render(0);
+
+    // Pin with ScrollTrigger using synchronous scrub (zero latency delay)
+    // Completely solves the bug where below sections scrolled up prematurely!
+    const trigger = ScrollTrigger.create({
+      id: "sky-fold-open",
+      trigger: root,
+      start: "top top",
+      pin: stage,
+      pinSpacing: true,
+      end: () => `+=${stage.clientHeight * (window.innerWidth <= 768 ? 3.0 : 3.5)}`,
+      scrub: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => render(self.progress),
     });
 
+    const refresh = () => ScrollTrigger.refresh();
+    document.fonts.ready.then(refresh);
+    window.addEventListener("resize", refresh);
+
     return () => {
-      disposed = true;
-      cleanup?.();
+      window.removeEventListener("resize", refresh);
+      trigger.kill();
     };
   }, []);
 

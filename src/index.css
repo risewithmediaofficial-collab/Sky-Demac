@@ -4306,8 +4306,7 @@ svg {
   height: 100% !important;
   object-fit: cover !important;
   object-position: center !important;
-  filter: blur(var(--phone-blur, 0px));
-  will-change: filter, transform;
+  will-change: transform;
 }
 
 .fold-phone-image-left { left: 0 !important; right: auto !important; }
@@ -6292,8 +6291,7 @@ textarea {
   height: 100% !important;
   object-fit: cover !important;
   object-position: center !important;
-  filter: blur(var(--phone-blur, 0px));
-  will-change: filter, transform;
+  will-change: transform;
 }
 
 .fold-phone-image-left {
