@@ -30,78 +30,99 @@ export default function ServicesOverviewPage() {
         window.scrollTo({ top: 0, behavior: "instant" });
         document.title = `Services Directory | ${business.name}`;
     }, []);
-    return (<div className="services-overview-page">
-      <div className="service-page-hero">
+    return (
+      <div className="services-overview-page">
+        <div className="service-page-hero">
+          <div className="wrap">
+            <div className="modern-pill-badge">
+              <span className="pill-dot" /> COMPLETE CARE DIRECTORY • 9 SPECIALIZED DIVISIONS
+            </div>
+            <h1 className="modern-display-heading">
+              <span>AUTOMOTIVE</span>
+              <span className="heading-inline-group">
+                <span className="tilted-pill-badge">STUDIO GRADE</span>
+                <span className="accent-text">SERVICES</span>
+              </span>
+            </h1>
+            <p className="service-page-tagline">
+              Multi-brand car care • Mechanical • Detailing • Paint Protection
+            </p>
+            <p className="service-page-detail">
+              Select any department to view dedicated offerings, transparent descriptions,
+              and immediate service enquiries.
+            </p>
+
+            {/* Quick Menu Pills */}
+            <div className="quick-nav-pills" style={{ marginTop: "24px" }}>
+              {business.serviceMenu.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className={`quick-pill ${item.label === "Book a Service" ? "quick-pill-cta" : ""}`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="wrap">
-          <div className="eyebrow">
-            <span /> SKY DEMAC AUTOMOTIVE • COMPLETE CARE DIRECTORY
+          {/* Workshop Operational Notice */}
+          <div className="services-notice-box" role="note" style={{ marginTop: "32px" }}>
+            <div className="notice-icon">
+              <ShieldCheck size={20}/>
+            </div>
+            <div className="notice-copy">
+              <strong>Workshop Operational Notice:</strong>
+              <p>{business.operationalNote}</p>
+            </div>
           </div>
-          <h1 className="service-page-title">Automotive Services</h1>
-          <p className="service-page-tagline">
-            Multi-brand car care • Mechanical • Detailing • Paint Protection
-          </p>
-          <p className="service-page-detail">
-            Select any department to view dedicated offerings, transparent descriptions,
-            and immediate service enquiries.
-          </p>
 
-          {/* Quick Menu Pills */}
-          <div className="quick-nav-pills" style={{ marginTop: "24px" }}>
-            {business.serviceMenu.map((item) => (<Link key={item.label} to={item.href} className={`quick-pill ${item.label === "Book a Service" ? "quick-pill-cta" : ""}`}>
-                {item.label}
-              </Link>))}
+          {/* 9 Categories Grid */}
+          <div className="overview-categories-grid">
+            {business.categories.map((cat, idx) => (
+              <div key={cat.id} className="overview-category-card">
+                <div className="overview-card-media">
+                  <SafeImage src={cat.image} alt={cat.imageAlt} width="600" height="380" loading="lazy"/>
+                  <span className="overview-card-num">0{idx + 1}</span>
+                  <span className="overview-card-badge">
+                    {getCategoryIcon(cat.id)}
+                    {cat.shortTitle}
+                  </span>
+                </div>
+                <div className="overview-card-body">
+                  <h3>{cat.title}</h3>
+                  <p className="overview-card-tagline">{cat.tagline}</p>
+
+                  <div className="overview-card-topics">
+                    {cat.items.slice(0, 4).map((item) => (
+                      <span key={item.title} className="overview-topic-item">
+                        <CheckCircle2 size={13} className="topic-check"/>
+                        {item.title}
+                      </span>
+                    ))}
+                    {cat.items.length > 4 && (
+                      <span className="overview-more-topics">
+                        +{cat.items.length - 4} more specialized services
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="overview-card-footer">
+                    <Link to={`/${cat.slug}`} className="overview-action-btn">
+                      <span>Explore {cat.shortTitle}</span>
+                      <span className="btn-circle-arrow"><ArrowUpRight size={14}/></span>
+                    </Link>
+                    <Link to={`/book-service?category=${encodeURIComponent(cat.title)}`} className="button button-dark">
+                      Book <CalendarCheck size={14}/>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-
-      <div className="wrap">
-        {/* Workshop Operational Notice */}
-        <div className="services-notice-box" role="note" style={{ marginTop: "32px" }}>
-          <div className="notice-icon">
-            <ShieldCheck size={20}/>
-          </div>
-          <div className="notice-copy">
-            <strong>Workshop Operational Notice:</strong>
-            <p>{business.operationalNote}</p>
-          </div>
-        </div>
-
-        {/* 9 Categories Grid */}
-        <div className="overview-categories-grid">
-          {business.categories.map((cat, idx) => (<div key={cat.id} className="overview-category-card">
-              <div className="overview-card-media">
-                <SafeImage src={cat.image} alt={cat.imageAlt} width="600" height="380" loading="lazy"/>
-                <span className="overview-card-num">0{idx + 1}</span>
-                <span className="overview-card-badge">
-                  {getCategoryIcon(cat.id)}
-                  {cat.shortTitle}
-                </span>
-              </div>
-              <div className="overview-card-body">
-                <h3>{cat.title}</h3>
-                <p className="overview-card-tagline">{cat.tagline}</p>
-
-                <div className="overview-card-topics">
-                  {cat.items.slice(0, 4).map((item) => (<span key={item.title} className="overview-topic-item">
-                      <CheckCircle2 size={13} className="topic-check"/>
-                      {item.title}
-                    </span>))}
-                  {cat.items.length > 4 && (<span className="overview-more-topics">
-                      +{cat.items.length - 4} more specialized services
-                    </span>)}
-                </div>
-
-                <div className="overview-card-footer">
-                  <Link to={`/${cat.slug}`} className="button button-primary">
-                    Explore {cat.shortTitle} <ArrowUpRight size={16}/>
-                  </Link>
-                  <Link to={`/book-service?category=${encodeURIComponent(cat.title)}`} className="button button-dark">
-                    Book <CalendarCheck size={14}/>
-                  </Link>
-                </div>
-              </div>
-            </div>))}
-        </div>
-      </div>
-    </div>);
+    );
 }

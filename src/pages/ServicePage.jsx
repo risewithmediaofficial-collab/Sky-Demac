@@ -57,10 +57,16 @@ export default function ServicePage({ forcedCategory }) {
 
           <div className="service-hero-grid">
             <div className="service-hero-info">
-              <div className="eyebrow">
-                <span /> SKY DEMAC AUTOMOTIVE • SPECIALIZED CARE
+              <div className="modern-pill-badge">
+                <span className="pill-dot" /> SPECIALIZED DIVISION • PRECISION STANDARD
               </div>
-              <h1 className="service-page-title">{category.title}</h1>
+              <h1 className="modern-display-heading">
+                <span>{category.title.split(" ")[0]}</span>
+                <span className="heading-inline-group">
+                  <span className="tilted-pill-badge">{category.shortTitle}</span>
+                  <span className="accent-text">{category.title.split(" ").slice(1).join(" ")}</span>
+                </span>
+              </h1>
               <p className="service-page-tagline">{category.tagline}</p>
               <p className="service-page-detail">{category.detail}</p>
 
@@ -117,13 +123,15 @@ export default function ServicePage({ forcedCategory }) {
         <div className="wrap">
           <div className="section-heading">
             <div>
-              <div className="eyebrow">
-                <span /> VISUAL CATALOGUE • INSTANT UNDERSTANDING
+              <div className="modern-pill-badge">
+                <span className="pill-dot" /> VISUAL CATALOGUE • INSTANT UNDERSTANDING
               </div>
-              <h2>
-                What is included.
-                <br />
-                <span className="muted">Transparent, specialized care.</span>
+              <h2 className="modern-display-heading">
+                <span>WHAT IS</span>
+                <span className="heading-inline-group">
+                  <span className="tilted-pill-badge">INCLUDED</span>
+                  <span className="accent-text">TRANSPARENT CARE</span>
+                </span>
               </h2>
             </div>
             <div className="heading-aside">
@@ -135,7 +143,8 @@ export default function ServicePage({ forcedCategory }) {
           </div>
 
           <div className="offerings-grid">
-            {category.items.map((item, index) => (<div key={item.title} className="offering-card">
+            {category.items.map((item, index) => (
+              <div key={item.title} className="offering-card">
                 <div className="offering-top">
                   <span className="offering-tag">{item.tag}</span>
                   <span className="offering-num">0{index + 1}</span>
@@ -148,10 +157,11 @@ export default function ServicePage({ forcedCategory }) {
                 <div className="offering-action">
                   <Link to={`/book-service?category=${encodeURIComponent(category.title)}&service=${encodeURIComponent(item.title)}`} className="offering-book-btn">
                     <span>Enquire for this</span>
-                    <ArrowUpRight size={14}/>
+                    <span className="btn-circle-arrow"><ArrowUpRight size={14}/></span>
                   </Link>
                 </div>
-              </div>))}
+              </div>
+            ))}
           </div>
         </div>
       </section>

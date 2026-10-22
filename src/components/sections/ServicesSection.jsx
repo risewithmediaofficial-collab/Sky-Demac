@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowUpRight,
+  Cpu,
   Check,
+  Hammer,
+  Paintbrush,
   Plus,
   ShieldCheck,
   Sparkles,
@@ -125,6 +128,53 @@ function ServiceDialog({ category, onClose }) {
 export default function ServicesSection() {
   const [selected, setSelected] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const categoryById = Object.fromEntries(
+    business.categories.map((category) => [category.id, category]),
+  );
+  const featuredServices = [
+    {
+      ...categoryById.detailing,
+      featureId: "detailing",
+      shortTitle: "Detailing",
+      description: "Deep cleaning, correction and a finish worth looking back at.",
+      kicker: "Finish & protection",
+      icon: Sparkles,
+    },
+    {
+      ...categoryById.mechanical,
+      featureId: "mechanical",
+      shortTitle: "Mechanical",
+      description: "Clear diagnosis and dependable care for the way your car drives.",
+      kicker: "Service & repair",
+      icon: Wrench,
+    },
+    {
+      ...categoryById["body-shop"],
+      featureId: "premium-painting",
+      shortTitle: "Premium painting",
+      description: "Careful preparation, colour matching and a clean lasting finish.",
+      kicker: "Body & paint",
+      image: "/images/exterior.webp",
+      icon: Paintbrush,
+    },
+    {
+      ...categoryById.accessories,
+      featureId: "accessories",
+      shortTitle: "Accessories",
+      description: "Useful upgrades, fitted neatly and selected for your car.",
+      kicker: "Comfort & technology",
+      icon: Cpu,
+    },
+    {
+      ...categoryById["body-shop"],
+      featureId: "tinkering",
+      shortTitle: "Tinkering",
+      description: "Dent correction and panel work shaped with patient attention.",
+      kicker: "Panel correction",
+      image: "/images/mechanical.webp",
+      icon: Hammer,
+    },
+  ];
 
   return (
     <section id="services" className="services-section section-pad">
@@ -150,25 +200,26 @@ export default function ServicesSection() {
           </div>
         </div>
 
-        {/* Section Heading */}
-        <div className="section-heading">
+        {/* Section Heading with Modern Typography & Alignment */}
+        <div className="section-heading services-modern-heading">
           <div>
-            <div className="eyebrow">
-              <span /> MULTI-BRAND CAR CARE • MECHANICAL • DETAILING • PAINT PROTECTION
+            <div className="modern-pill-badge">
+              <span className="pill-dot" /> MULTI-BRAND CAR CARE • PRECISION DIRECTORY
             </div>
-            <h2>
-              Complete Automotive Care.
-              <br />
-              <span className="muted">Built for the Pressure.</span>
+            <h2 className="modern-display-heading">
+              <span>FIVE WAYS WE</span>
+              <span className="heading-inline-group">
+                <span className="tilted-pill-badge">CERTIFIED STUDIO</span>
+                <span className="accent-text">CARE FOR YOUR CAR</span>
+              </span>
             </h2>
           </div>
           <div className="heading-aside">
             <p>
-              From everyday upkeep to bespoke ceramic studio and body repair.
-              <br />
-              Care that starts with understanding your car.
+              From the way it drives to the way it looks, start with the care
+              your car needs today.
             </p>
-            <Link to="/services" className="text-link">
+            <Link to="/services" className="button button-dark">
               Explore All 9 Departments <ArrowUpRight size={17} />
             </Link>
           </div>
@@ -185,45 +236,42 @@ export default function ServicesSection() {
           </div>
         </div>
 
-        {/* 28px Feature Cards Grid */}
-        <div className="service-grid">
-          {business.categories.slice(0, 3).map((category, index) => (
-            <Link
-              key={category.id}
-              to={`/${category.slug}`}
-              className="service-card"
-              aria-label={`Explore ${category.title}`}
-            >
-              <div className="service-image">
-                <SafeImage
-                  src={category.image}
-                  alt={category.imageAlt}
-                  width="600"
-                  height="440"
-                  loading="lazy"
-                />
-                <span className="card-number">0{index + 1}</span>
-                <span className="service-icon">
-                  {index === 0 ? (
-                    <Wrench size={19} />
-                  ) : index === 1 ? (
-                    <Sparkles size={19} />
-                  ) : (
-                    <ShieldCheck size={19} />
-                  )}
-                </span>
-              </div>
-              <div className="card-copy">
-                <div>
-                  <h3>{category.shortTitle}</h3>
-                  <p>{category.description}</p>
+        <div className="service-grid service-bento-grid">
+          {featuredServices.map((category, index) => {
+            const ServiceIcon = category.icon;
+            return (
+              <Link
+                key={category.featureId}
+                to={`/${category.slug}`}
+                className={`service-card service-card-${index + 1}`}
+                aria-label={`Explore ${category.title}`}
+              >
+                <div className="service-image">
+                  <SafeImage
+                    src={category.image}
+                    alt={category.imageAlt}
+                    width="600"
+                    height="440"
+                    loading="lazy"
+                  />
+                  <span className="card-number">0{index + 1}</span>
+                  <span className="service-icon" aria-hidden="true">
+                    <ServiceIcon size={19} />
+                  </span>
                 </div>
-                <span className="circle-arrow">
+                <div className="card-copy">
+                  <div>
+                    <span className="service-kicker">{category.kicker}</span>
+                    <h3>{category.shortTitle}</h3>
+                    <p>{category.description}</p>
+                  </div>
+                </div>
+                <span className="circle-arrow" aria-hidden="true">
                   <ArrowUpRight size={20} />
                 </span>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Footer & Expandable Care Areas */}

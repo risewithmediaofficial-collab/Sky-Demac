@@ -19,10 +19,16 @@ export default function AboutPage() {
             <span className="breadcrumb-current">About Us</span>
           </div>
 
-          <div className="eyebrow">
-            <span /> SKY DEMAC AUTOMOTIVE • BUILT FOR THE PRESSURE
+          <div className="modern-pill-badge">
+            <span className="pill-dot" /> WORKSHOP PHILOSOPHY • BUILT FOR THE PRESSURE
           </div>
-          <h1 className="service-page-title">About SKY DEMAC</h1>
+          <h1 className="modern-display-heading">
+            <span>ABOUT</span>
+            <span className="heading-inline-group">
+              <span className="tilted-pill-badge">EST. PERFORMANCE</span>
+              <span className="accent-text">SKY DEMAC</span>
+            </span>
+          </h1>
           <p className="service-page-tagline">
             Complete Automotive Care • Premium Detailing • Professional Maintenance
           </p>
@@ -32,10 +38,13 @@ export default function AboutPage() {
       <div className="wrap section-pad">
         <div className="about-layout" style={{ marginBottom: "64px" }}>
           <div>
-            <div className="eyebrow">
-              <span /> WORKSHOP PHILOSOPHY
+            <div className="modern-pill-badge">
+              <span className="pill-dot" /> CORE COMMITMENT
             </div>
-            <h2>Built for the Pressure.</h2>
+            <h2 className="modern-display-heading" style={{ fontSize: "clamp(32px, 3.8vw, 52px)" }}>
+              <span>BUILT FOR THE</span>
+              <span className="accent-text">PRESSURE.</span>
+            </h2>
             <div className="about-prose" style={{ marginTop: "24px" }}>
               <p>
                 SKY DEMAC AUTOMOTIVE was founded on a simple principle: precision

@@ -1,5 +1,6 @@
 import Header from "./Header";
 import Footer from "./Footer";
+import QuickAccessDock from "./QuickAccessDock";
 import { business } from "../../config";
 
 /**
@@ -19,6 +20,7 @@ export default function Layout({ children }) {
       </a>
       <Header />
       <main id="main-content">{children}</main>
+      <QuickAccessDock />
       <Footer />
     </div>
   );

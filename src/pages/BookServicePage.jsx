@@ -22,10 +22,16 @@ export default function BookServicePage() {
             <span className="breadcrumb-current">Book a Service</span>
           </div>
 
-          <div className="eyebrow">
-            <span /> SKY DEMAC AUTOMOTIVE • RESERVATIONS & ENQUIRIES
+          <div className="modern-pill-badge">
+            <span className="pill-dot" /> RESERVATIONS & ESTIMATES • DIRECT WORKSHOP
           </div>
-          <h1 className="service-page-title">Book a Service</h1>
+          <h1 className="modern-display-heading">
+            <span>BOOK A</span>
+            <span className="heading-inline-group">
+              <span className="tilted-pill-badge">FAST CONFIRMATION</span>
+              <span className="accent-text">SERVICE</span>
+            </span>
+          </h1>
           <p className="service-page-tagline">
             Tell us about your car and required service. We'll prepare your inspection estimate.
           </p>
@@ -44,10 +50,13 @@ export default function BookServicePage() {
 
         <div className="contact-layout">
           <div className="contact-copy">
-            <div className="eyebrow">
-              <span /> DIRECT ASSISTANCE
+            <div className="modern-pill-badge">
+              <span className="pill-dot" /> DIRECT ASSISTANCE
             </div>
-            <h2>Let's talk about your car.</h2>
+            <h2 className="modern-display-heading" style={{ fontSize: "clamp(30px, 3.5vw, 48px)" }}>
+              <span>LET'S TALK ABOUT</span>
+              <span className="accent-text">YOUR CAR.</span>
+            </h2>
             <p>
               Whether it's routine oil and filter servicing, paint protection film, or an
               unfamiliar engine sound, we take the time to evaluate your vehicle properly.

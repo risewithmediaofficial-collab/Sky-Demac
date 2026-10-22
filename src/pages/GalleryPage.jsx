@@ -40,10 +40,16 @@ export default function GalleryPage() {
             <span className="breadcrumb-current">Gallery – Our Work</span>
           </div>
 
-          <div className="eyebrow">
-            <span /> SKY DEMAC AUTOMOTIVE • CRAFTSMANSHIP
+          <div className="modern-pill-badge">
+            <span className="pill-dot" /> CRAFTSMANSHIP SHOWCASE • PROVEN RESULTS
           </div>
-          <h1 className="service-page-title">Gallery – Our Work</h1>
+          <h1 className="modern-display-heading">
+            <span>OUR WORK</span>
+            <span className="heading-inline-group">
+              <span className="tilted-pill-badge">PORTFOLIO</span>
+              <span className="accent-text">GALLERY</span>
+            </span>
+          </h1>
           <p className="service-page-tagline">
             Precision engineering, mirror-finish detailing, and restored paintwork.
           </p>
