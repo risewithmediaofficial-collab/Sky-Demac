@@ -6453,6 +6453,10 @@ textarea {
   text-align: left;
 }
 
+.cinema-mobile-status {
+  display: none;
+}
+
 /* Mobile & Tablet Responsiveness (<= 900px) */
 @media (max-width: 900px) {
   .cinema-stage {
@@ -6463,11 +6467,11 @@ textarea {
   }
 
   .cinema-caption {
-    top: 74px !important;
+    top: 84px !important;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
-    width: min(92vw, 420px) !important;
+    width: min(92vw, 400px) !important;
     max-width: 100% !important;
     padding: 0 !important;
     background: transparent !important;
@@ -6498,17 +6502,17 @@ textarea {
   }
 
   .cinema-caption .modern-pill-badge {
-    margin-bottom: 6px !important;
-    font-size: 10.5px !important;
-    padding: 4px 11px !important;
+    margin-bottom: 8px !important;
+    font-size: 11px !important;
+    padding: 4px 12px !important;
     letter-spacing: 0.08em !important;
   }
 
   .cinema-caption .modern-display-heading {
-    font-size: clamp(22px, 6.2vw, 28px) !important;
-    line-height: 1.1 !important;
-    letter-spacing: -0.025em !important;
-    margin-bottom: 6px !important;
+    font-size: clamp(25px, 7vw, 32px) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.015em !important;
+    margin-bottom: 8px !important;
     align-items: center;
     text-align: center;
     display: flex;
@@ -6516,13 +6520,22 @@ textarea {
     gap: 0;
   }
 
+  .cinema-caption .modern-display-heading span:first-child {
+    color: #ffffff !important;
+  }
+
+  .cinema-caption .modern-display-heading .accent-text {
+    color: #e31e24 !important;
+  }
+
   .cinema-caption .cinema-support {
-    font-size: clamp(12px, 3.4vw, 13.5px) !important;
-    line-height: 1.4 !important;
+    font-size: clamp(12.5px, 3.4vw, 14px) !important;
+    line-height: 1.45 !important;
     color: rgba(255, 255, 255, 0.72) !important;
     max-width: 32ch !important;
-    margin: 0 auto 10px auto !important;
+    margin: 0 auto 12px auto !important;
     text-align: center !important;
+    display: block !important;
   }
 
   .cinema-caption .cinema-actions {
@@ -6530,61 +6543,117 @@ textarea {
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 8px !important;
-    flex-wrap: wrap !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
   }
 
   .cinema-caption .cinema-actions .button,
   .cinema-caption .cinema-actions .button-primary {
-    font-size: 12px !important;
-    padding: 7px 15px !important;
-    min-height: 36px !important;
+    font-size: 12.5px !important;
+    padding: 8px 18px !important;
+    min-height: 38px !important;
     border-radius: 99px !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .cinema-caption .cinema-actions .cinema-secondary {
-    font-size: 12px !important;
-    padding: 7px 13px !important;
-    min-height: 36px !important;
+    font-size: 12.5px !important;
+    padding: 8px 16px !important;
+    min-height: 38px !important;
     border-radius: 99px !important;
     background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     color: #ffffff !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .fold-phone {
     left: 50% !important;
-    top: 61% !important;
+    top: 56% !important;
     transform: translate(-50%, -50%) scale(var(--phone-scale)) !important;
-    width: min(90vw, 370px) !important;
-    aspect-ratio: 1.78 / 1 !important;
+    width: min(88vw, 360px) !important;
+    aspect-ratio: 16 / 9 !important;
     pointer-events: none !important;
   }
 
   .cinema-bottom {
-    bottom: 74px !important;
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    bottom: 82px !important;
     padding: 0 16px !important;
-    z-index: 5 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    z-index: 15 !important;
+    pointer-events: auto !important;
   }
 
   .cinema-skip {
+    display: none !important;
+  }
+
+  .cinema-chapter {
+    display: none !important;
+  }
+
+  .cinema-mobile-status {
+    display: block !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  .cinema-chapter-dots {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+
+  .chapter-dot {
+    padding: 4px 11px !important;
+    min-width: 32px !important;
+    height: 28px !important;
+    font-size: 11.5px !important;
+    border-radius: 99px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .cinema-progress {
     display: none !important;
   }
 }
 
 @media (max-width: 640px) {
   .cinema-caption {
-    top: 70px !important;
-    width: min(94vw, 360px) !important;
+    top: 78px !important;
+    width: min(92vw, 360px) !important;
   }
 
   .cinema-caption .modern-display-heading {
-    font-size: clamp(20px, 5.8vw, 25px) !important;
+    font-size: clamp(23px, 6.6vw, 29px) !important;
   }
 
   .fold-phone {
-    top: 62% !important;
-    width: min(92vw, 340px) !important;
+    top: 57% !important;
+    width: min(90vw, 350px) !important;
   }
 
   .fold-phone-panel {
@@ -6611,24 +6680,7 @@ textarea {
   }
 
   .cinema-bottom {
-    bottom: 70px !important;
-  }
-}
-
-@media (max-height: 680px) and (max-width: 900px) {
-  .cinema-caption {
-    top: 62px !important;
-  }
-  .cinema-caption .modern-display-heading {
-    font-size: 19px !important;
-    margin-bottom: 3px !important;
-  }
-  .cinema-caption .cinema-support {
-    display: none !important;
-  }
-  .fold-phone {
-    top: 63% !important;
-    width: min(84vw, 300px) !important;
+    bottom: 80px !important;
   }
 }
 

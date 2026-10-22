@@ -45,21 +45,21 @@ function Caption({ index }) {
       </div>
       {index === 0 ? (
         <h1 className="modern-display-heading" style={{ color: "#ffffff" }}>
-          <span>BUILT FOR THE</span>
-          <span className="accent-text">PRESSURE.</span>
+          <span style={{ color: "#ffffff" }}>BUILT FOR THE</span>
+          <span className="accent-text" style={{ color: "#e31e24" }}>PRESSURE.</span>
         </h1>
       ) : (
-        <h2 className="modern-display-heading" style={{ fontSize: "clamp(30px, 3.5vw, 48px)", color: "#ffffff" }}>
+        <h2 className="modern-display-heading" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", color: "#ffffff" }}>
           {scene.title}
         </h2>
       )}
       <p className="cinema-support">{scene.copy}</p>
       <div className="cinema-actions">
         <Link to="/services" className="button button-primary">
-          Explore Services <ArrowUpRight size={17} />
+          Explore Services <ArrowUpRight size={15} />
         </Link>
         <Link to="/contact" className="cinema-secondary">
-          Enquire About a Service <ChevronRight size={15} />
+          Enquire About a Service <ChevronRight size={14} />
         </Link>
       </div>
     </div>
@@ -78,7 +78,8 @@ export default function FoldingHero() {
       const isMobile = window.innerWidth <= 768;
       const multiplier = isMobile ? 1.8 : 2.4;
       const pinDistance = (stage?.clientHeight || window.innerHeight) * multiplier;
-      const targetScroll = sectionRef.current.offsetTop + 0.28 * pinDistance + (idx / (scenes.length - 1)) * (pinDistance * 0.72);
+      const unfoldEnd = 0.3;
+      const targetScroll = sectionRef.current.offsetTop + unfoldEnd * pinDistance + (idx / (scenes.length - 1)) * (pinDistance * (1 - unfoldEnd));
       window.scrollTo({ top: targetScroll, behavior: "smooth" });
     }
   };
@@ -100,23 +101,26 @@ export default function FoldingHero() {
 
       const render = (rawProgress) => {
         const progress = clamp(rawProgress);
-        // Smooth 3D iPhone unfold during first ~28% of scroll
-        const open = ease(clamp(progress / 0.28));
-        const story = clamp((progress - 0.24) / 0.76);
-        const chapterPosition = story * (scenes.length - 1);
+        // Unfolding completes during first 30% of scroll
+        const unfoldEnd = 0.3;
+        const open = ease(clamp(progress / unfoldEnd));
+        
+        // Chapter crossfades start ONLY after phone is open
+        const storyProgress = clamp((progress - unfoldEnd) / (1 - unfoldEnd));
+        const chapterPosition = storyProgress * (scenes.length - 1);
         const active = Math.min(scenes.length - 1, Math.floor(chapterPosition));
         const local = chapterPosition - active;
         const next = Math.min(scenes.length - 1, active + 1);
         const blend = active === next ? 0 : ease(local);
 
         const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-        const maxAngle = isMobile ? 62 : 72;
+        const maxAngle = isMobile ? 60 : 70;
         const foldAngle = (1 - open) * maxAngle;
 
         root.style.setProperty("--phone-open", open.toFixed(4));
         root.style.setProperty("--phone-angle", `${foldAngle.toFixed(2)}deg`);
         root.style.setProperty("--phone-blur", `${(1 - open) * 4}px`);
-        root.style.setProperty("--phone-scale", (0.86 + open * 0.14).toFixed(4));
+        root.style.setProperty("--phone-scale", (0.88 + open * 0.12).toFixed(4));
         root.style.setProperty("--phone-shift", isMobile ? "0%" : `${(1 - open) * -16}%`);
         root.style.setProperty("--phone-glare", (0.35 - open * 0.35).toFixed(4));
         root.style.setProperty("--phone-shadow-alpha", (0.32 + open * 0.38).toFixed(4));
@@ -236,6 +240,9 @@ export default function FoldingHero() {
             <span className="cinema-chapter-line" />
             <span>{scenes[activeIndex].label}</span>
             <span className="cinema-chapter-total">/ 05</span>
+          </div>
+          <div className="cinema-mobile-status" aria-hidden="true">
+            0{activeIndex + 1} / 05 · {scenes[activeIndex].label}
           </div>
           <div className="cinema-chapter-dots" aria-label="Select chapter">
             {scenes.map((s, idx) => (
