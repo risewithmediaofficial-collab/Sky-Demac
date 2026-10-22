@@ -59,7 +59,7 @@ function Caption({ index }) {
           Explore Services <ArrowUpRight size={15} />
         </Link>
         <Link to="/contact" className="cinema-secondary">
-          Enquire About a Service <ChevronRight size={14} />
+          Enquire Now <ArrowUpRight size={15} />
         </Link>
       </div>
     </div>
@@ -129,9 +129,17 @@ export default function FoldingHero() {
 
         arts.forEach((art) => {
           const index = Number(art.dataset.art);
-          let opacity = index === active ? 1 - blend : 0;
-          if (index === next) opacity = Math.max(opacity, blend);
+          let opacity = 0;
+          let zIndex = 0;
+          if (index === active) {
+            opacity = 1;
+            zIndex = 1;
+          } else if (index === next && blend > 0.02) {
+            opacity = blend;
+            zIndex = 2;
+          }
           art.style.opacity = String(opacity);
+          art.style.zIndex = String(zIndex);
         });
 
         captions.forEach((caption, index) => {

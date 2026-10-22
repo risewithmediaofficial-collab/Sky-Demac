@@ -4292,9 +4292,8 @@ svg {
 
 .fold-phone-art {
   opacity: 0;
-  transform: scale(1.035);
-  transition: opacity .12s linear;
-  transform-origin: center;
+  transform: none !important;
+  transition: opacity .15s ease-out;
 }
 
 .fold-phone-art[data-art="0"] { opacity: 1; }
@@ -5195,75 +5194,7 @@ textarea {
   }
 }
 
-/* Seamless fold display: one canvas with only a soft center crease. */
-.fold-phone-panel {
-  width: 50%;
-}
 
-.fold-phone-left {
-  padding: clamp(8px, .72vw, 12px) 0 clamp(8px, .72vw, 12px) clamp(8px, .72vw, 12px);
-  border-radius: clamp(28px, 2.5vw, 42px) 0 0 clamp(28px, 2.5vw, 42px);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,.42), inset 0 -1px 0 rgba(255,255,255,.16);
-}
-
-.fold-phone-right {
-  left: 50%;
-  padding: clamp(8px, .72vw, 12px) clamp(8px, .72vw, 12px) clamp(8px, .72vw, 12px) 0;
-  border-radius: 0 clamp(28px, 2.5vw, 42px) clamp(28px, 2.5vw, 42px) 0;
-  box-shadow: inset -1px 1px 0 rgba(255,255,255,.42), inset 0 -1px 0 rgba(255,255,255,.16);
-}
-
-.fold-phone-left .fold-phone-screen {
-  border-right: 0;
-  border-radius: clamp(21px, 1.9vw, 33px) 0 0 clamp(21px, 1.9vw, 33px);
-}
-
-.fold-phone-right .fold-phone-screen {
-  border-left: 0;
-  border-radius: 0 clamp(21px, 1.9vw, 33px) clamp(21px, 1.9vw, 33px) 0;
-}
-
-.fold-phone-hinge {
-  left: calc(50% - .5px);
-  top: 2.7%;
-  bottom: 2.7%;
-  width: 1px;
-  border-radius: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.3) 48%, rgba(255,255,255,.08));
-  box-shadow: -5px 0 12px rgba(0,0,0,.12), 5px 0 12px rgba(255,255,255,.035);
-  opacity: var(--phone-open);
-}
-
-.fold-phone[data-state="closed"] .fold-phone-right {
-  padding: clamp(8px, .72vw, 12px);
-  border-radius: clamp(28px, 2.5vw, 42px);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.4), 0 24px 55px rgba(0,0,0,.25);
-}
-
-.fold-phone[data-state="closed"] .fold-phone-right .fold-phone-screen {
-  border: 1px solid rgba(255,255,255,.13);
-  border-radius: clamp(21px, 1.9vw, 33px);
-}
-
-@media (max-width: 640px) {
-  .fold-phone-left {
-    padding: 6px 0 6px 6px;
-    border-radius: 24px 0 0 24px;
-  }
-
-  .fold-phone-right {
-    padding: 6px 6px 6px 0;
-    border-radius: 0 24px 24px 0;
-  }
-
-  .fold-phone-left .fold-phone-screen {
-    border-radius: 18px 0 0 18px;
-  }
-
-  .fold-phone-right .fold-phone-screen {
-    border-radius: 0 18px 18px 0;
-  }
-}
 
 /* =====================================================
    SIGNATURE SKY DEMAC UI SYSTEM
@@ -6289,17 +6220,17 @@ textarea {
   pointer-events: none;
 }
 
-/* Left & Right Panels meet at 50% with zero gap */
+/* Left & Right Panels meet at exactly 50% with zero gap */
 .fold-phone-panel {
   position: absolute;
   top: 0;
-  width: 50.15%;
+  width: 50% !important;
   height: 100%;
   padding: clamp(8px, 0.72vw, 12px);
-  background: linear-gradient(145deg, #42464b 0%, #17191d 18%, #08090b 50%, #202328 85%, #60646c 100%);
+  background: #14171c;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
-    inset 0 0 0 2.5px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.8),
     0 24px 60px rgba(0, 0, 0, 0.5);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -6310,21 +6241,24 @@ textarea {
 .fold-phone-left {
   left: 0;
   padding-right: 0 !important;
-  margin-right: -0.5px !important;
+  margin-right: 0 !important;
   border-radius: clamp(28px, 2.5vw, 42px) 0 0 clamp(28px, 2.5vw, 42px) !important;
   transform-origin: right center;
   transform: rotateY(var(--phone-angle));
   z-index: 3;
   will-change: transform;
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(255,255,255,.15) !important;
+  background: linear-gradient(135deg, #2e323a 0%, #17191d 65%, #111317 100%) !important;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,.28), inset 0 -1px 0 rgba(255,255,255,.1) !important;
 }
 
 .fold-phone-right {
   left: 50% !important;
   padding-left: 0 !important;
+  margin-left: 0 !important;
   border-radius: 0 clamp(28px, 2.5vw, 42px) clamp(28px, 2.5vw, 42px) 0 !important;
   z-index: 2;
-  box-shadow: inset -1px 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(255,255,255,.15) !important;
+  background: linear-gradient(225deg, #2e323a 0%, #17191d 65%, #111317 100%) !important;
+  box-shadow: inset -1px 1px 0 rgba(255,255,255,.28), inset 0 -1px 0 rgba(255,255,255,.1) !important;
 }
 
 /* Zero cut mark: the screens meet flush at center */
@@ -6467,7 +6401,7 @@ textarea {
   }
 
   .cinema-caption {
-    top: 84px !important;
+    top: 92px !important;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
@@ -6643,7 +6577,7 @@ textarea {
 
 @media (max-width: 640px) {
   .cinema-caption {
-    top: 78px !important;
+    top: 86px !important;
     width: min(92vw, 360px) !important;
   }
 
