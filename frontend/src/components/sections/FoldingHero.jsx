@@ -6,7 +6,7 @@ import SafeImage from "../common/SafeImage";
 
 const protectionEnabled = ["ppf", "ceramic-coating", "specialised-coating"].some(isServiceActive);
 const scenes = [
-  { id: "opening", label: "The opening", eyebrow: "ENGINEERED TO CARE.", copy: "Complete automotive care. Exceptional attention.", image: "/images/scene-wide.webp" },
+  { id: "opening", label: "The opening", eyebrow: "PRECISION ENGINEERING.", copy: "Bespoke automotive care. Masterful precision.", image: "/images/scene-wide.webp" },
   { id: "mechanical", label: "Mechanical care", eyebrow: "02 / MECHANICAL CARE", title: "Precision in every service.", copy: "A closer look. A clearer understanding.", image: "/images/scene-wheel.webp" },
   { id: "detailing", label: "The finer details", eyebrow: "03 / THE FINER DETAILS", title: "Every detail. Refined.", copy: "A considered approach to every surface.", image: "/images/scene-detail.webp" },
   { id: "exterior", label: protectionEnabled ? "Paint protection" : "Exterior care", eyebrow: protectionEnabled ? "04 / PAINT PROTECTION" : "04 / EXTERIOR CARE", title: protectionEnabled ? "Protect every finish." : "Care for every curve.", copy: protectionEnabled ? "An illustrative study in surface protection." : "Thoughtful care, down to the finish.", image: "/images/scene-exterior.webp" },
@@ -49,8 +49,8 @@ function Caption({ index }) {
       </div>
       {index === 0 ? (
         <h1 className="modern-display-heading" style={{ color: "#ffffff" }}>
-          <span style={{ color: "#ffffff" }}>BUILT FOR THE</span>
-          <span className="accent-text" style={{ color: "#e31e24" }}>PRESSURE.</span>
+          <span style={{ color: "#ffffff" }}>ENGINEERED FOR</span>
+          <span className="accent-text" style={{ color: "#e31e24" }}>PERFORMANCE.</span>
         </h1>
       ) : (
         <h2 className="modern-display-heading" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", color: "#ffffff" }}>
@@ -281,69 +281,102 @@ export default function FoldingHero() {
     const render = (rawProgress) => {
       const progress = clamp(rawProgress);
 
-      // Unfold phone during the transition from 0.0 to 0.22
-      // At 0: phone is folded at ~58deg
-      // At 0.22: phone is completely unfolded flat (0deg)
-      const unfoldEnd = 0.22;
+      // Unfold phone during the initial opening (progress 0.0 to 0.20)
+      const unfoldEnd = 0.20;
       const unfoldFraction = clamp(progress / unfoldEnd);
-      const open = ease(unfoldFraction);
+      const initialOpen = ease(unfoldFraction);
 
-      // Chapters crossfade between 0.0 and 1.0
+      // Chapters transition
       const numChapters = scenes.length;
       const span = progress * (numChapters - 1);
       const chapterIndex = Math.min(numChapters - 1, Math.floor(span));
       const fraction = span - chapterIndex;
 
-      const transitionStart = 0.35;
       let active = chapterIndex;
       let next = chapterIndex;
       let blend = 0;
+      let foldFactor = 0;
 
-      if (fraction > transitionStart && chapterIndex < numChapters - 1) {
+      if (fraction > 0.001 && chapterIndex < numChapters - 1) {
         next = chapterIndex + 1;
-        const blendRaw = (fraction - transitionStart) / (1 - transitionStart);
-        blend = ease(blendRaw);
-        if (blend >= 0.5) {
+        blend = ease(fraction);
+        if (fraction >= 0.5) {
           active = next;
         }
+        // Center fold factor peaks at 1.0 midway through each transition
+        foldFactor = Math.sin(fraction * Math.PI);
       }
 
       const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-      const maxAngle = isMobile ? 54 : 64;
-      const foldAngle = (1 - open) * maxAngle;
+      const maxInitialAngle = isMobile ? 54 : 64;
+      const baseLeftAngle = (1 - initialOpen) * maxInitialAngle;
 
-      root.style.setProperty("--phone-open", open.toFixed(4));
-      root.style.setProperty("--phone-angle", `${foldAngle.toFixed(2)}deg`);
-      root.style.setProperty("--phone-scale", (0.88 + open * 0.12).toFixed(4));
-      root.style.setProperty("--phone-shift", isMobile ? "0%" : `${(1 - open) * -16}%`);
-      root.style.setProperty("--phone-shadow-alpha", (0.32 + open * 0.38).toFixed(4));
-      root.style.setProperty("--phone-shadow-scale", (0.72 + open * 0.28).toFixed(4));
+      // Authentic iPhone fold from the center crease:
+      // When changing, left and right panels fold symmetrically inward from center by up to 44deg!
+      const centerFoldAngle = foldFactor * (isMobile ? 36 : 44);
+      const totalLeftAngle = baseLeftAngle + centerFoldAngle;
+      const totalRightAngle = -centerFoldAngle;
 
-      // Layer switching: base is chapterIndex (zIndex 1), incoming is next (zIndex 2)
+      // Motion blur during the center fold
+      const foldBlur = foldFactor * 16; // up to 16px blur at peak fold!
+
+      const phoneScale = (0.88 + initialOpen * 0.12 - foldFactor * 0.05).toFixed(4);
+      const phoneShift = isMobile ? "0%" : `${((1 - initialOpen) * -16).toFixed(2)}%`;
+      const shadowAlpha = (0.32 + initialOpen * 0.38 + foldFactor * 0.22).toFixed(4);
+      const shadowScale = (0.72 + initialOpen * 0.28).toFixed(4);
+
+      root.style.setProperty("--phone-open", initialOpen.toFixed(4));
+      root.style.setProperty("--phone-angle", `${totalLeftAngle.toFixed(2)}deg`);
+      root.style.setProperty("--phone-left-angle", `${totalLeftAngle.toFixed(2)}deg`);
+      root.style.setProperty("--phone-right-angle", `${totalRightAngle.toFixed(2)}deg`);
+      root.style.setProperty("--phone-crease-opacity", (foldFactor * 0.85).toFixed(3));
+      root.style.setProperty("--phone-scale", phoneScale);
+      root.style.setProperty("--phone-shift", phoneShift);
+      root.style.setProperty("--phone-shadow-alpha", shadowAlpha);
+      root.style.setProperty("--phone-shadow-scale", shadowScale);
+
+      // Layer switching with Center Fold & Blur animation
       for (let i = 0; i < scenes.length; i++) {
         const artList = artsBySceneRef.current[i];
         if (!artList) continue;
+
         let opacity = 0;
         let zIndex = 0;
-        if (i === chapterIndex) {
+        let blur = 0;
+
+        if (fraction > 0.001 && chapterIndex < numChapters - 1) {
+          if (i === chapterIndex) {
+            // Outgoing scene: fades out as it folds into center
+            opacity = Math.max(0, 1 - blend * 1.3);
+            zIndex = 1;
+            blur = foldBlur;
+          } else if (i === next) {
+            // Incoming scene: reveals as it unfolds from center
+            opacity = clamp(blend * 1.4);
+            zIndex = 2;
+            blur = foldBlur;
+          }
+        } else if (i === active) {
+          // Settled active scene: sharp and pristine
           opacity = 1;
-          zIndex = 1;
-        } else if (i === next && blend > 0.01) {
-          opacity = blend;
           zIndex = 2;
+          blur = 0;
         }
+
         for (let j = 0; j < artList.length; j++) {
           artList[j].style.opacity = String(opacity);
           artList[j].style.zIndex = String(zIndex);
+          artList[j].style.transform = "";
+          artList[j].style.filter = blur > 0.3 ? `blur(${blur.toFixed(1)}px)` : "none";
         }
       }
 
-      // Update captions and React state only when active chapter changes
+      // Update captions: clean, rock-solid opacity fade (no flip on text)
       if (active !== lastActiveRef.current) {
         captionsRef.current.forEach((caption, index) => {
           const visible = index === active;
-          caption.style.opacity = visible ? "1" : "0";
-          caption.style.visibility = visible ? "visible" : "hidden";
+          caption.classList.toggle("is-active", visible);
+          caption.setAttribute("aria-hidden", String(!visible));
         });
         lastActiveRef.current = active;
         setActiveIndex(active);
@@ -464,7 +497,7 @@ export default function FoldingHero() {
         <div className="cinema-copy-layer">
           {scenes.map((scene, index) => (
             <div
-              className={`cinema-caption cinema-caption-${index % 2 === 0 ? "left" : "right"}`}
+              className={`cinema-caption cinema-caption-${index % 2 === 0 ? "left" : "right"} ${activeIndex === index ? "is-active" : ""}`}
               data-scene={index}
               key={scene.id}
               aria-hidden={activeIndex !== index}

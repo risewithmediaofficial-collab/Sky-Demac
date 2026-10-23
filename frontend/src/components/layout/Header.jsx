@@ -14,6 +14,10 @@ import {
   Zap,
   Gauge,
   ShieldCheck,
+  Phone,
+  MapPin,
+  MessageCircle,
+  Instagram,
 } from "lucide-react";
 import { business } from "../../config";
 import Wordmark from "../common/Wordmark";
@@ -292,33 +296,39 @@ export default function Header() {
             {/* Mobile Services Accordion (Strictly hidden on desktop via CSS) */}
             <div
               className={`mobile-services-accordion ${servicesOpen ? "is-open" : ""}`}
+              aria-hidden={!servicesOpen}
             >
-              {business.categories.map((cat) => (
+              <div className="mobile-services-inner">
+                {business.categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    to={`/${cat.slug}`}
+                    className="mobile-sub-link"
+                    onClick={closeMenus}
+                  >
+                    <div className="mobile-sub-left">
+                      <span className="mobile-sub-icon">
+                        {getCategoryNavIcon(cat.id)}
+                      </span>
+                      <span className="mobile-sub-name">{cat.title}</span>
+                    </div>
+                    <ArrowUpRight size={14} className="mobile-sub-arrow" />
+                  </Link>
+                ))}
                 <Link
-                  key={cat.id}
-                  to={`/${cat.slug}`}
-                  className="mobile-sub-link"
+                  to="/services"
+                  className="mobile-sub-link mobile-all-services"
                   onClick={closeMenus}
                 >
                   <div className="mobile-sub-left">
-                    {getCategoryNavIcon(cat.id)}
-                    <span>{cat.title}</span>
+                    <span className="mobile-sub-name">View All 9 Departments</span>
                   </div>
-                  <ArrowUpRight size={13} />
+                  <ArrowUpRight size={14} className="mobile-sub-arrow" />
                 </Link>
-              ))}
-              <Link
-                to="/services"
-                className="mobile-sub-link mobile-all-services"
-                onClick={closeMenus}
-              >
-                <span>View All 9 Departments</span>
-                <ArrowUpRight size={13} />
-              </Link>
+              </div>
             </div>
           </div>
 
-          {/* Other Nav Links */}
           {/* Other Nav Links */}
           {navLinks.map(({ id, title, href }) => (
             <Link
@@ -332,6 +342,91 @@ export default function Header() {
             </Link>
           ))}
 
+          {/* Mobile Drawer Workshop & Contact Details */}
+          <div className="mobile-drawer-contact-card">
+            <span className="drawer-contact-title">WORKSHOP & CONTACT</span>
+            <div className="drawer-contact-items">
+              <a
+                href={business.mapUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="drawer-contact-row"
+                onClick={closeMenus}
+              >
+                <div className="drawer-contact-icon">
+                  <MapPin size={15} />
+                </div>
+                <div>
+                  <strong>Workshop Location</strong>
+                  <p>{business.address}</p>
+                </div>
+                <ArrowUpRight size={13} className="drawer-contact-arrow" />
+              </a>
+
+              <a
+                href={`tel:${business.phone}`}
+                className="drawer-contact-row"
+                onClick={closeMenus}
+              >
+                <div className="drawer-contact-icon">
+                  <Phone size={15} />
+                </div>
+                <div>
+                  <strong>Primary Workshop Line</strong>
+                  <p>{business.phone}</p>
+                </div>
+              </a>
+
+              <a
+                href={`tel:${business.phoneSecondary}`}
+                className="drawer-contact-row"
+                onClick={closeMenus}
+              >
+                <div className="drawer-contact-icon">
+                  <Phone size={15} />
+                </div>
+                <div>
+                  <strong>Secondary Line</strong>
+                  <p>{business.phoneSecondary}</p>
+                </div>
+              </a>
+
+              <a
+                href={`https://wa.me/${business.whatsapp.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noreferrer"
+                className="drawer-contact-row"
+                onClick={closeMenus}
+              >
+                <div className="drawer-contact-icon whatsapp-icon-bg">
+                  <MessageCircle size={15} />
+                </div>
+                <div>
+                  <strong>WhatsApp Care</strong>
+                  <p>{business.whatsapp}</p>
+                </div>
+                <ArrowUpRight size={13} className="drawer-contact-arrow" />
+              </a>
+
+              <a
+                href={business.instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="drawer-contact-row"
+                onClick={closeMenus}
+              >
+                <div className="drawer-contact-icon instagram-icon-bg">
+                  <Instagram size={15} />
+                </div>
+                <div>
+                  <strong>Instagram Official</strong>
+                  <p>@sky.demac</p>
+                </div>
+                <ArrowUpRight size={13} className="drawer-contact-arrow" />
+              </a>
+            </div>
+          </div>
+
           {/* Mobile Drawer CTA Button (Strictly hidden on desktop via CSS) */}
           <div className="mobile-drawer-cta">
             <Link
@@ -343,6 +438,28 @@ export default function Header() {
             </Link>
           </div>
         </nav>
+
+        {/* Desktop Quick Header Contact & Location */}
+        <div className="header-meta-group">
+          <a
+            href={business.mapUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="header-meta-chip header-location-chip"
+            title="Open Workshop Location on Google Maps"
+          >
+            <MapPin size={13} className="text-accent" />
+            <span>Krishnagiri, TN</span>
+          </a>
+          <a
+            href={`tel:${business.phone}`}
+            className="header-meta-chip header-phone-chip"
+            title={`Call Workshop: ${business.phone} / ${business.phoneSecondary}`}
+          >
+            <Phone size={13} className="text-accent" />
+            <span>{business.phone}</span>
+          </a>
+        </div>
 
         {/* Desktop Quick Header CTA */}
         <Link
