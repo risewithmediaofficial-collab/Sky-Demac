@@ -11,9 +11,37 @@ import {
   Sparkles,
   Wrench,
   X,
+  Car,
+  Layers,
+  CircleDot,
+  Zap,
+  Gauge,
 } from "lucide-react";
 import { business, confirmedServices } from "../../config";
 import SafeImage from "../common/SafeImage";
+
+function getCareGuideIcon(id) {
+  switch (id) {
+    case "mechanical":
+      return <Wrench size={19} />;
+    case "detailing":
+      return <Sparkles size={19} />;
+    case "wash":
+      return <Car size={19} />;
+    case "body-shop":
+      return <Layers size={19} />;
+    case "accessories":
+      return <Cpu size={19} />;
+    case "wheels":
+      return <CircleDot size={19} />;
+    case "electrical":
+      return <Zap size={19} />;
+    case "special-care":
+      return <Gauge size={19} />;
+    default:
+      return <ShieldCheck size={19} />;
+  }
+}
 
 /**
  * Service modal dialog for care guides
@@ -274,34 +302,66 @@ export default function ServicesSection() {
           })}
         </div>
 
-        {/* Footer & Expandable Care Areas */}
-        <div className="services-footer">
-          <p>
-            <span className="status-dot" /> Care guides · Service availability to
-            be confirmed.
-          </p>
-          <button
-            className="text-link"
-            aria-expanded={expanded}
-            aria-controls="all-care-areas"
-            onClick={() => setExpanded(!expanded)}
-          >
-            {expanded ? "Show fewer care areas" : "Explore all care areas"}{" "}
-            <Plus size={16} className={expanded ? "rotate-45" : ""} />
-          </button>
-        </div>
-
-        <div id="all-care-areas" hidden={!expanded} className="more-services">
-          {business.categories.slice(3).map((category) => (
-            <Link
-              key={category.id}
-              to={`/${category.slug}`}
-              className="more-service-card"
+        {/* Glassmorphic Care Guides & Expandable All Care Areas */}
+        <div className="care-guides-glass-tray">
+          <div className="services-footer">
+            <div className="care-guides-header-left">
+              <span className="status-dot-pulse" aria-hidden="true" />
+              <div>
+                <span className="care-guides-badge">CARE GUIDES DIRECTORY</span>
+                <p className="care-guides-note">
+                  Service availability to be confirmed • Specialist facility previews
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className={`care-guides-toggle-btn ${expanded ? "is-active" : ""}`}
+              aria-expanded={expanded}
+              aria-controls="all-care-areas"
+              onClick={() => setExpanded(!expanded)}
             >
-              <span>{category.title}</span>
-              <ArrowUpRight size={20} />
-            </Link>
-          ))}
+              <span>{expanded ? "Show fewer care areas" : "Explore all care areas"}</span>
+              <span className={`toggle-icon-wrap ${expanded ? "is-rotated" : ""}`}>
+                <Plus size={16} />
+              </span>
+            </button>
+          </div>
+
+          <div
+            id="all-care-areas"
+            className={`more-services-accordion ${expanded ? "is-open" : ""}`}
+            aria-hidden={!expanded}
+          >
+            <div className="more-services-grid">
+              {business.categories.slice(3).map((category, idx) => (
+                <Link
+                  key={category.id}
+                  to={`/${category.slug}`}
+                  className="more-service-glass-card"
+                >
+                  <div className="more-card-glass-glow" aria-hidden="true" />
+                  <div className="more-card-head">
+                    <span className="more-card-icon-frame">
+                      {getCareGuideIcon(category.id)}
+                    </span>
+                    <span className="more-card-index">0{idx + 4}</span>
+                  </div>
+                  <div className="more-card-content">
+                    <span className="more-card-short-tag">{category.shortTitle}</span>
+                    <h4 className="more-card-title">{category.title}</h4>
+                    <p className="more-card-tagline">{category.tagline}</p>
+                  </div>
+                  <div className="more-card-foot">
+                    <span>Explore Department</span>
+                    <span className="more-card-arrow-circle">
+                      <ArrowUpRight size={14} />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Confirmed Services (if active) */}

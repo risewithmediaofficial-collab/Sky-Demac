@@ -83,16 +83,18 @@ export default function ServicesOverviewPage() {
           <div className="overview-categories-grid">
             {business.categories.map((cat, idx) => (
               <div key={cat.id} className="overview-category-card">
-                <div className="overview-card-media">
+                <Link to={`/${cat.slug}`} className="overview-card-media" aria-label={`View ${cat.title}`}>
                   <SafeImage src={cat.image} alt={cat.imageAlt} width="600" height="380" loading="lazy"/>
                   <span className="overview-card-num">0{idx + 1}</span>
                   <span className="overview-card-badge">
                     {getCategoryIcon(cat.id)}
-                    {cat.shortTitle}
+                    <span>{cat.shortTitle}</span>
                   </span>
-                </div>
+                </Link>
                 <div className="overview-card-body">
-                  <h3>{cat.title}</h3>
+                  <Link to={`/${cat.slug}`} className="overview-card-title-link">
+                    <h3>{cat.title}</h3>
+                  </Link>
                   <p className="overview-card-tagline">{cat.tagline}</p>
 
                   <div className="overview-card-topics">
@@ -110,12 +112,13 @@ export default function ServicesOverviewPage() {
                   </div>
 
                   <div className="overview-card-footer">
-                    <Link to={`/${cat.slug}`} className="overview-action-btn">
-                      <span>Explore {cat.shortTitle}</span>
-                      <span className="btn-circle-arrow"><ArrowUpRight size={14}/></span>
+                    <Link to={`/${cat.slug}`} className="overview-action-btn" aria-label={`Explore ${cat.title}`}>
+                      <span>Explore</span>
+                      <span className="btn-circle-arrow" aria-hidden="true"><ArrowUpRight size={14}/></span>
                     </Link>
-                    <Link to={`/book-service?category=${encodeURIComponent(cat.title)}`} className="button button-dark">
-                      Book <CalendarCheck size={14}/>
+                    <Link to={`/book-service?category=${encodeURIComponent(cat.title)}`} className="overview-book-btn" aria-label={`Book ${cat.title}`}>
+                      <CalendarCheck size={14} className="overview-book-icon" aria-hidden="true"/>
+                      <span>Book Now</span>
                     </Link>
                   </div>
                 </div>
