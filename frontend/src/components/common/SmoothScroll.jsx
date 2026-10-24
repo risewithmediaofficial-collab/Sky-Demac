@@ -15,32 +15,45 @@ export default function SmoothScroll({ children }) {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    // Prevent mobile address bar show/hide from causing layout thrashing mid-scroll
     ScrollTrigger.config({ ignoreMobileResize: true });
 
-    const lenis = new Lenis({
-      duration: 1.05,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.4,
-      infinite: false,
-    });
+    // Detect touch / coarse-pointer mobile devices
+    const isTouchDevice =
+      typeof window !== "undefined" &&
+      (window.matchMedia("(pointer: coarse)").matches ||
+        "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0);
 
-    window.__lenis = lenis;
+    let lenis = null;
+    let onTick = null;
 
-    // Connect Lenis to ScrollTrigger
-    lenis.on("scroll", ScrollTrigger.update);
+    if (!isTouchDevice) {
+      // On desktop: use smooth momentum wheel scrolling
+      lenis = new Lenis({
+        duration: 1.05,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        wheelMultiplier: 1.0,
+        syncTouch: false,
+        infinite: false,
+      });
 
-    // Drive Lenis RAF loop strictly through GSAP's ticker for zero-latency frame lock
-    const onTick = (time) => {
-      lenis.raf(time * 1000);
-    };
+      window.__lenis = lenis;
 
-    gsap.ticker.add(onTick);
-    gsap.ticker.lagSmoothing(0);
+      // Connect Lenis to ScrollTrigger
+      lenis.on("scroll", ScrollTrigger.update);
+
+      // Drive Lenis RAF loop strictly through GSAP's ticker
+      onTick = (time) => {
+        lenis.raf(time * 1000);
+      };
+
+      gsap.ticker.add(onTick);
+      // Use resilient lag smoothing rather than 0 so minor hiccups do not cause frame skips
+      gsap.ticker.lagSmoothing(500, 33);
+    }
 
     // Smoothly handle in-page hash links (e.g. #services, #contact, #home)
     const handleAnchorClick = (e) => {
@@ -50,17 +63,21 @@ export default function SmoothScroll({ children }) {
       const href = anchor.getAttribute("href");
       if (!href) return;
 
-      // Only handle internal hashes on current page
       if (href.startsWith("#") && href.length > 1) {
         const target = document.querySelector(href);
         if (target) {
           e.preventDefault();
-          lenis.scrollTo(target, { offset: -30, duration: 1.1 });
+          if (lenis) {
+            lenis.scrollTo(target, { offset: -30, duration: 1.1 });
+          } else {
+            const top = target.getBoundingClientRect().top + window.scrollY - 30;
+            window.scrollTo({ top, behavior: "smooth" });
+          }
         }
       }
     };
 
-    document.addEventListener("click", handleAnchorClick, { passive: false });
+    document.addEventListener("click", handleAnchorClick);
 
     // Refresh triggers once fonts and initial layout load
     document.fonts.ready.then(() => {
@@ -69,9 +86,13 @@ export default function SmoothScroll({ children }) {
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
-      gsap.ticker.remove(onTick);
-      lenis.destroy();
-      window.__lenis = null;
+      if (onTick) {
+        gsap.ticker.remove(onTick);
+      }
+      if (lenis) {
+        lenis.destroy();
+        window.__lenis = null;
+      }
     };
   }, []);
 

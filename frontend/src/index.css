@@ -319,7 +319,7 @@ section:focus {
   color: #1d1d1f;
   border-bottom: 1px solid transparent;
   filter: none !important;
-  transition: background 0.25s ease, border-color 0.25s ease, backdrop-filter 0.25s ease, box-shadow 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .site-header.is-scrolled {
@@ -657,9 +657,9 @@ section:focus {
     display: block !important;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     z-index: 1001;
     opacity: 0;
     pointer-events: none;
@@ -871,9 +871,9 @@ section:focus {
     gap: 6px;
     padding: 8px;
     border-radius: 16px;
-    background: rgba(18, 20, 26, 0.72) !important;
-    backdrop-filter: blur(24px) saturate(190%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+    background: rgba(18, 20, 26, 0.96) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 12px 32px rgba(0, 0, 0, 0.45) !important;
     transform: translateY(-8px);
@@ -891,9 +891,9 @@ section:focus {
     justify-content: space-between;
     padding: 11px 13px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
     font-size: 13.5px;
@@ -917,9 +917,10 @@ section:focus {
     width: 32px;
     height: 32px;
     border-radius: 9px;
-    background: rgba(227, 30, 36, 0.16) !important;
-    border: 1px solid rgba(227, 30, 36, 0.32) !important;
-    backdrop-filter: blur(10px) !important;
+    background: rgba(227, 30, 36, 0.2) !important;
+    border: 1px solid rgba(227, 30, 36, 0.35) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     box-shadow: 0 2px 8px rgba(227, 30, 36, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
     color: #ff4d53 !important;
     display: flex;
@@ -1052,12 +1053,13 @@ html {
 }
 
 body {
-  background:
+  background-color: #0b0b0b;
+  background-image:
     radial-gradient(circle at 10% 14%, rgba(227,30,36,.2), transparent 28rem),
     radial-gradient(circle at 92% 38%, rgba(255,255,255,.18), transparent 32rem),
     radial-gradient(circle at 34% 82%, rgba(107,107,107,.22), transparent 30rem),
     linear-gradient(145deg, #121212 0%, #28282a 44%, #0b0b0b 100%);
-  background-attachment: fixed;
+  background-attachment: scroll;
 }
 
 #root {
@@ -1069,28 +1071,31 @@ body {
 .process-section,
 .faq-section,
 .about-section,
-.contact-section {
-  background: rgba(245, 245, 245, .76);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
+.contact-section,
+.work-section,
+footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
+}
+
+.services-section,
+.process-section,
+.faq-section {
+  background: #f7f7f9;
 }
 
 .about-section,
 .contact-section {
-  background: rgba(255, 255, 255, .78);
+  background: #ffffff;
 }
 
 .work-section {
-  background: rgba(11, 11, 11, .72);
-  -webkit-backdrop-filter: blur(28px) saturate(150%);
-  backdrop-filter: blur(28px) saturate(150%);
+  background: #0d0e12;
 }
 
 .brand-strip,
 footer {
-  background: rgba(11, 11, 11, .76);
-  -webkit-backdrop-filter: blur(26px) saturate(150%);
-  backdrop-filter: blur(26px) saturate(150%);
+  background: #0b0c10;
 }
 
 .service-card,
@@ -1266,24 +1271,97 @@ textarea:focus {
   border-color: rgba(255,255,255,.12);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 900px), (pointer: coarse) {
   :root {
-    --glass-blur: blur(14px) saturate(140%);
-    --glass-shadow: 0 14px 36px rgba(11,11,11,.12);
-    --glass-shadow-soft: 0 8px 24px rgba(11,11,11,.09);
+    --glass-blur: none;
+    --glass-light: rgba(255, 255, 255, 0.94);
+    --glass-border-light: rgba(0, 0, 0, 0.08);
+    --glass-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --glass-shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.05);
   }
 
   body {
     background-attachment: scroll;
   }
 
+  /* Micro-elements and small pills: bypass GPU blur entirely on mobile */
+  .card-number,
+  .service-icon,
+  .modern-pill-badge,
+  .overview-card-num,
+  .overview-card-badge,
+  .curated-badge,
+  .hero-side-btn,
+  .hint-pill,
+  .header-meta-chip,
+  .dropdown-book-btn,
+  .comparison-before,
+  .comparison-after,
+  .service-media-overlay {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Mobile cards: high-performance opaque acrylic with crisp hairline highlight */
+  .service-card,
+  .process-grid li,
+  .faq-list details,
+  .enquiry-form,
+  .services-quick-nav,
+  .services-notice-box,
+  .overview-category-card,
+  .curated-gallery-card,
+  .comparison,
+  .gallery-cta-box,
+  .pillar-card,
+  .preselect-banner,
+  .contact-item,
+  .contact-details a,
+  .address-line,
+  .offering-card,
+  .process-mini-step,
+  .other-service-pill,
+  .cta-banner-content,
+  .about-image-card,
+  .service-media-frame {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .work-section .comparison,
+  .care-guides-glass-tray,
+  .more-service-glass-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(18, 20, 26, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  .quick-access-dock {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(14, 16, 22, 0.96) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .site-header.is-scrolled {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+  }
+
   .site-header.menu-open .navigation {
-    border-left: 1px solid rgba(255,255,255,.14);
-    background:
-      linear-gradient(145deg, rgba(255,255,255,.08), transparent 38%),
-      rgba(11,11,11,.86);
-    -webkit-backdrop-filter: blur(26px) saturate(160%);
-    backdrop-filter: blur(26px) saturate(160%);
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(12, 14, 18, 0.98) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
   }
 }
 
@@ -5239,28 +5317,33 @@ footer strong {
   }
 }
 
-/* Final glass cascade: keeps legacy component rules from restoring opaque fills. */
+/* Final glass cascade: sections stay clean without full-page backdrop blur */
 .services-section,
 .process-section,
-.faq-section,
-.about-section,
-.contact-section {
-  background: rgba(245,245,245,.76);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
+.faq-section {
+  background: #f7f7f9;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .about-section,
 .contact-section {
-  background: rgba(255,255,255,.78);
+  background: #ffffff;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
-.work-section,
+.work-section {
+  background: #0d0e12;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 .brand-strip,
 footer {
-  background: rgba(11,11,11,.74);
-  -webkit-backdrop-filter: blur(28px) saturate(155%);
-  backdrop-filter: blur(28px) saturate(155%);
+  background: #0b0c10;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .service-card,

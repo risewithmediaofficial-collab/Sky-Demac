@@ -6,7 +6,6 @@ import {
   PhoneCall,
   Instagram,
   X,
-  ChevronUp,
 } from "lucide-react";
 import { business } from "../../config";
 

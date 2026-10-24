@@ -82,6 +82,7 @@ export default function FoldingHero() {
   const targetProgressRef = useRef(0);
   const lastActiveRef = useRef(-1);
   const hasInteractedRef = useRef(false);
+  const requestLoopRef = useRef(null);
 
   // Gesture tracking
   const isTouchActiveRef = useRef(false);
@@ -116,6 +117,7 @@ export default function FoldingHero() {
     markInteracted();
     const clamped = Math.max(0, Math.min(scenes.length - 1, idx));
     targetProgressRef.current = clamped / (scenes.length - 1);
+    requestLoopRef.current?.();
   }, [markInteracted]);
 
   const handlePrev = useCallback(() => {
@@ -186,6 +188,7 @@ export default function FoldingHero() {
       // Moving 65% of screen width shifts 1 chapter
       const progressDelta = -dx / (stageWidth * 0.85);
       targetProgressRef.current = clamp(mouseStartProgressRef.current + progressDelta);
+      requestLoopRef.current?.();
     }
   };
 
@@ -207,6 +210,7 @@ export default function FoldingHero() {
     lastMouseTimeRef.current = performance.now();
     velocityXRef.current = 0;
     setIsDragging(true);
+    requestLoopRef.current?.();
   };
 
   const handleMouseMove = (e) => {
@@ -223,6 +227,7 @@ export default function FoldingHero() {
     const stageWidth = stageRef.current?.clientWidth || window.innerWidth;
     const progressDelta = -dx / (stageWidth * 0.95);
     targetProgressRef.current = clamp(mouseStartProgressRef.current + progressDelta);
+    requestLoopRef.current?.();
   };
 
   const handleMouseUp = () => {
@@ -242,12 +247,14 @@ export default function FoldingHero() {
       const delta = e.deltaX * 0.0014;
       targetProgressRef.current = clamp(targetProgressRef.current + delta);
       snapWithFlick(-e.deltaX * 0.01);
+      requestLoopRef.current?.();
     } else if (e.shiftKey && Math.abs(e.deltaY) > 4) {
       e.preventDefault();
       markInteracted();
       const delta = e.deltaY * 0.0014;
       targetProgressRef.current = clamp(targetProgressRef.current + delta);
       snapWithFlick(-e.deltaY * 0.01);
+      requestLoopRef.current?.();
     }
     // If pure vertical scroll without shift key: do NOT preventDefault! Allow normal page scroll downwards.
   };
@@ -317,8 +324,12 @@ export default function FoldingHero() {
       const totalLeftAngle = baseLeftAngle + centerFoldAngle;
       const totalRightAngle = -centerFoldAngle;
 
-      // Motion blur during the center fold
-      const foldBlur = foldFactor * 16; // up to 16px blur at peak fold!
+      // Motion blur during the center fold - bypassed on touch/mobile devices for 60fps performance
+      const isTouchOrCoarse =
+        typeof window !== "undefined" &&
+        (window.innerWidth <= 900 ||
+          window.matchMedia("(pointer: coarse)").matches);
+      const foldBlur = isTouchOrCoarse ? 0 : foldFactor * 16;
 
       const phoneScale = (0.88 + initialOpen * 0.12 - foldFactor * 0.05).toFixed(4);
       const phoneShift = isMobile ? "0%" : `${((1 - initialOpen) * -16).toFixed(2)}%`;
@@ -397,36 +408,75 @@ export default function FoldingHero() {
     // Initial render
     render(0);
 
-    // Animation frame loop with smooth lerp
-    let animationFrameId;
+    // Animation frame loop with smooth lerp & dormant-when-settled behavior
+    let animationFrameId = null;
+    let isLooping = false;
+    let isVisible = true;
     const lerpFactor = 0.14;
 
     const loop = () => {
+      if (!isVisible) {
+        isLooping = false;
+        return;
+      }
+
       const diff = targetProgressRef.current - currentProgressRef.current;
-      if (Math.abs(diff) > 0.0003 || isTouchActiveRef.current || isMouseDraggingRef.current) {
+      const isInteracting = isTouchActiveRef.current || isMouseDraggingRef.current;
+
+      if (Math.abs(diff) > 0.0002 || isInteracting) {
         currentProgressRef.current += diff * lerpFactor;
         render(currentProgressRef.current);
+        animationFrameId = requestAnimationFrame(loop);
+      } else {
+        currentProgressRef.current = targetProgressRef.current;
+        render(currentProgressRef.current);
+        isLooping = false;
       }
-      animationFrameId = requestAnimationFrame(loop);
     };
 
-    loop();
+    const requestLoop = () => {
+      if (!isLooping && isVisible) {
+        isLooping = true;
+        animationFrameId = requestAnimationFrame(loop);
+      }
+    };
+    requestLoopRef.current = requestLoop;
+
+    // IntersectionObserver to pause loop completely when offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          requestLoop();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(root);
+
+    requestLoop();
 
     // Subtle teaser nudge after 800ms to invite side exploration if user has not interacted
     const teaserTimer = setTimeout(() => {
       if (!hasInteractedRef.current && targetProgressRef.current === 0) {
         targetProgressRef.current = 0.07;
+        requestLoop();
         setTimeout(() => {
           if (!hasInteractedRef.current && targetProgressRef.current === 0.07) {
             targetProgressRef.current = 0;
+            requestLoop();
           }
         }, 750);
       }
     }, 900);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       clearTimeout(teaserTimer);
+      requestLoopRef.current = null;
     };
   }, []);
 
