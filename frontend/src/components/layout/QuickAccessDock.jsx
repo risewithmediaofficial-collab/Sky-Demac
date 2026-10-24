@@ -71,7 +71,7 @@ export default function QuickAccessDock() {
           </div>
           <div className="quick-access-text">
             <strong>WhatsApp Care</strong>
-            <small>7598111628</small>
+            <small>7598111621</small>
           </div>
         </a>
 

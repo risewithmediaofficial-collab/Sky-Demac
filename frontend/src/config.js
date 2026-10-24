@@ -15,7 +15,7 @@ export const business = {
     phone: "+91 75981 11621",
     phoneSecondary: "+91 75981 11622",
     phones: ["+91 75981 11621", "+91 75981 11622"],
-    whatsapp: "+91 75981 11628",
+    whatsapp: "+91 75981 11621",
     email: "contact@skydemac.com",
     address: "NH 48, Krishnagiri, Tamil Nadu, India",
     mapUrl: "https://maps.app.goo.gl/h1ZjCz9rYjmRxPST6?g_st=iw",
@@ -680,6 +680,6 @@ export const confirmedServices = business.categories.flatMap((category) => categ
     .filter((service) => service.confirmed && service.enabled)
     .map((service) => ({ ...service, category: category.title })));
 export const isServiceActive = (id) => confirmedServices.some((service) => service.id === id);
-export const whatsappNumber = /^\+?[1-9]\d{7,14}$/.test(business.whatsapp)
-    ? business.whatsapp.replace("+", "")
+export const whatsappNumber = /^\+?[1-9]\d{7,14}$/.test(business.whatsapp.replace(/\s+/g, ""))
+    ? business.whatsapp.replace(/\D/g, "")
     : "";
