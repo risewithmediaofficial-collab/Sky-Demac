@@ -31,7 +31,7 @@ export default function Footer() {
       <div className="wrap">
         <div className="footer-top">
           <Link to="/" className="brand footer-brand" aria-label="SKY DEMAC home">
-            <Wordmark />
+            <Wordmark variant="footer" />
           </Link>
           <p>
             Complete Automotive Care. Premium Detailing.

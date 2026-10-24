@@ -9,7 +9,7 @@ export const business = {
     name: "SKY DEMAC AUTOMOTIVE",
     tagline: "Built for the Pressure.",
     supportingLine: "Complete Automotive Care. Premium Detailing. Professional Maintenance.",
-    logo: "",
+    logo: "/images/skey demac logo.png",
     accent: "#e31e24",
     accentHover: "#bd1419",
     phone: "+91 75981 11621",
