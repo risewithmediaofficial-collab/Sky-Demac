@@ -3,14 +3,6 @@ import { Link } from "react-router-dom";
 import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { isServiceActive } from "../../config";
 import SafeImage from "../common/SafeImage";
-import SpinningWheelArt from "./SpinningWheelArt";
-
-const FRAME_COUNT = 36;
-const FRAME_RATE = 24;
-const FRAME_INTERVAL = 1000 / FRAME_RATE;
-const wheelFrames = Array.from({ length: FRAME_COUNT }, (_, i) =>
-  `/wheel-hero/frames/wheel-${String(i).padStart(2, "0")}.webp`
-);
 
 const protectionEnabled = ["ppf", "ceramic-coating", "specialised-coating"].some(isServiceActive);
 const scenes = [
@@ -27,25 +19,21 @@ const ease = (value) => {
   return n * n * (3 - 2 * n);
 };
 
-function PanelArt({ side, wheelRef }) {
+function PanelArt({ side }) {
   return (
     <div className="fold-phone-art-stack" aria-hidden="true">
       {scenes.map((scene, index) => (
         <div className="fold-phone-art" data-art={index} key={`${side}-${scene.id}`}>
-          {index === 0 ? (
-            <SpinningWheelArt side={side} wheelRef={wheelRef} />
-          ) : (
-            <SafeImage
-              src={scene.image}
-              className={`fold-phone-image fold-phone-image-${side}`}
-              alt=""
-              width="1805"
-              height="871"
-              loading={index <= 1 ? "eager" : "lazy"}
-              fetchPriority={index === 0 ? "high" : "auto"}
-              decoding="async"
-            />
-          )}
+          <SafeImage
+            src={scene.image}
+            className={`fold-phone-image fold-phone-image-${side}`}
+            alt=""
+            width="1805"
+            height="871"
+            loading={index <= 1 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            decoding="async"
+          />
         </div>
       ))}
     </div>
@@ -82,7 +70,7 @@ function Caption({ index }) {
   );
 }
 
-export default function FoldingHero({ isLoaded = false }) {
+export default function FoldingHero() {
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -95,10 +83,6 @@ export default function FoldingHero({ isLoaded = false }) {
   const lastActiveRef = useRef(-1);
   const hasInteractedRef = useRef(false);
   const requestLoopRef = useRef(null);
-
-  // Spinning Wheel Frame Animation Refs (DOM direct updates, 0 React re-renders)
-  const leftWheelRef = useRef(null);
-  const rightWheelRef = useRef(null);
 
   // Gesture tracking
   const isTouchActiveRef = useRef(false);
@@ -473,95 +457,6 @@ export default function FoldingHero({ isLoaded = false }) {
     };
   }, []);
 
-  // Exactly 10-second wheel spin animation loop
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (typeof window === "undefined") return;
-    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isReducedMotion) return;
-
-    // Preload background image and all 36 frames into browser cache
-    const bgImg = new Image();
-    bgImg.src = "/wheel-hero/hero-background.webp";
-
-    wheelFrames.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-
-    let wheelRafId = null;
-    const startTime = performance.now();
-    const WHEEL_DURATION = 10000; // Exactly 10 seconds
-    let lastTime = startTime;
-    let currentFrame = 0;
-    let isVisible = true;
-
-    const setFrameSource = (idx) => {
-      const src = wheelFrames[idx];
-      const leftEl = leftWheelRef.current;
-      const rightEl = rightWheelRef.current;
-      if (leftEl) {
-        leftEl.setAttribute("href", src);
-        leftEl.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", src);
-      }
-      if (rightEl) {
-        rightEl.setAttribute("href", src);
-        rightEl.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", src);
-      }
-    };
-
-    const animateWheel = (now) => {
-      // Pause processing when off-screen
-      if (!isVisible) {
-        wheelRafId = requestAnimationFrame(animateWheel);
-        return;
-      }
-
-      // Idle when navigated far away from Scene 0 to save mobile GPU/CPU
-      if (currentProgressRef.current > 0.35) {
-        wheelRafId = requestAnimationFrame(animateWheel);
-        lastTime = now;
-        return;
-      }
-
-      const totalElapsed = now - startTime;
-      if (totalElapsed >= WHEEL_DURATION) {
-        // 10 seconds completed: cleanly freeze on final frame and stop RAF
-        setFrameSource(currentFrame);
-        return;
-      }
-
-      const elapsed = now - lastTime;
-      if (elapsed >= FRAME_INTERVAL) {
-        const steps = Math.floor(elapsed / FRAME_INTERVAL);
-        currentFrame = (currentFrame + steps) % FRAME_COUNT;
-        lastTime = now - (elapsed % FRAME_INTERVAL);
-        setFrameSource(currentFrame);
-      }
-
-      wheelRafId = requestAnimationFrame(animateWheel);
-    };
-
-    // Viewport intersection observer to completely halt loop when offscreen
-    const heroObserver = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-      },
-      { threshold: 0.05 }
-    );
-
-    if (sectionRef.current) {
-      heroObserver.observe(sectionRef.current);
-    }
-
-    wheelRafId = requestAnimationFrame(animateWheel);
-
-    return () => {
-      if (wheelRafId) cancelAnimationFrame(wheelRafId);
-      heroObserver.disconnect();
-    };
-  }, [isLoaded]);
-
   return (
     <section
       id="home"
@@ -608,7 +503,7 @@ export default function FoldingHero({ isLoaded = false }) {
         <div className="fold-phone" data-state="closed" aria-label="A folding phone opens to reveal automotive work">
           <div className="fold-phone-panel fold-phone-left">
             <div className="fold-phone-screen">
-              <PanelArt side="left" wheelRef={leftWheelRef} />
+              <PanelArt side="left" />
             </div>
             <span className="fold-phone-speaker" aria-hidden="true" />
             <span className="fold-phone-button fold-phone-button-left" aria-hidden="true" />
@@ -616,7 +511,7 @@ export default function FoldingHero({ isLoaded = false }) {
 
           <div className="fold-phone-panel fold-phone-right">
             <div className="fold-phone-screen">
-              <PanelArt side="right" wheelRef={rightWheelRef} />
+              <PanelArt side="right" />
             </div>
             <span className="fold-phone-camera" aria-hidden="true" />
             <span className="fold-phone-button fold-phone-button-right" aria-hidden="true" />

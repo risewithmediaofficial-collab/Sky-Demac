@@ -47,18 +47,26 @@ export default function WheelLoader({ onFinish }) {
     let currentFrame = 0;
 
     const animateWheel = (now) => {
-      const delta = now - lastFrameTime;
-      if (delta >= FRAME_INTERVAL) {
-        const steps = Math.floor(delta / FRAME_INTERVAL);
-        currentFrame = (currentFrame + steps) % FRAME_COUNT;
-        lastFrameTime = now - (delta % FRAME_INTERVAL);
+      const elapsed = Math.min(TOTAL_LOADER_TIME, now - startTime);
+
+      // As it docks in the last 150ms, lock smoothly onto frame 0 (the exact original rim angle)
+      if (elapsed >= TOTAL_LOADER_TIME - 150) {
         if (wheelImgRef.current) {
-          wheelImgRef.current.src = wheelFrames[currentFrame];
+          wheelImgRef.current.src = wheelFrames[0];
+        }
+      } else {
+        const delta = now - lastFrameTime;
+        if (delta >= FRAME_INTERVAL) {
+          const steps = Math.floor(delta / FRAME_INTERVAL);
+          currentFrame = (currentFrame + steps) % FRAME_COUNT;
+          lastFrameTime = now - (delta % FRAME_INTERVAL);
+          if (wheelImgRef.current) {
+            wheelImgRef.current.src = wheelFrames[currentFrame];
+          }
         }
       }
 
       // Progress bar fill over 2000ms
-      const elapsed = Math.min(TOTAL_LOADER_TIME, now - startTime);
       if (progressLineRef.current) {
         const pct = (elapsed / TOTAL_LOADER_TIME) * 100;
         progressLineRef.current.style.width = `${pct}%`;

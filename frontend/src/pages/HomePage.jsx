@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { business } from "../config";
 import { useSectionReveals } from "../hooks";
 import { WheelLoader } from "../components/common";
@@ -6,12 +6,10 @@ import { FoldingHero, BrandStrip, ServicesSection } from "../components/sections
 
 /**
  * SKY DEMAC Homepage
- * Features the 3-second full-screen spinning wheel loader,
- * clean rectangular hero section with 10-second wheel animation,
- * brand strip, and the services provided section.
+ * Features the 2-second morphing wheel loader that docks onto the Porsche,
+ * and the folding hero showcase with flat launch and 3D chapter folding.
  */
 export default function HomePage() {
-  const [isLoaded, setIsLoaded] = useState(false);
   useSectionReveals();
 
   useEffect(() => {
@@ -20,8 +18,8 @@ export default function HomePage() {
 
   return (
     <>
-      <WheelLoader onFinish={() => setIsLoaded(true)} />
-      <FoldingHero isLoaded={isLoaded} />
+      <WheelLoader />
+      <FoldingHero />
       <BrandStrip />
       <ServicesSection />
     </>
