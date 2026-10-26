@@ -182,7 +182,7 @@ export default function ServicesSection() {
       shortTitle: "Premium painting",
       description: "Careful preparation, colour matching and a clean lasting finish.",
       kicker: "Body & paint",
-      image: "/images/exterior.webp",
+      image: "/images/red-car-paint-detail.jpg",
       icon: Paintbrush,
     },
     {
@@ -199,7 +199,7 @@ export default function ServicesSection() {
       shortTitle: "Tinkering",
       description: "Dent correction and panel work shaped with patient attention.",
       kicker: "Panel correction",
-      image: "/images/mechanical.webp",
+      image: "/images/dodge-challenger-workshop.jpg",
       icon: Hammer,
     },
   ];

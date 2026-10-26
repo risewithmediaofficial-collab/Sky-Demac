@@ -61,7 +61,7 @@ export default function GalleryPage() {
         <div className="gallery-curated-grid">
           <div className="curated-gallery-card">
             <div className="curated-img-frame">
-              <SafeImage src="/images/detailing.webp" alt="Ceramic coating and mirror gloss paint finish" width="800" height="500"/>
+              <SafeImage src="/images/ferrari-red-studio.jpg" alt="Rosso Corsa Ferrari ceramic coating and mirror gloss paint finish" width="800" height="500"/>
               <span className="curated-badge">
                 <Sparkles size={14}/> Ceramic Coating & Paint Correction
               </span>
@@ -77,7 +77,7 @@ export default function GalleryPage() {
 
           <div className="curated-gallery-card">
             <div className="curated-img-frame">
-              <SafeImage src="/images/mechanical.webp" alt="High-performance mechanical maintenance and brake overhaul" width="800" height="500"/>
+              <SafeImage src="/images/dodge-challenger-workshop.jpg" alt="Crimson Dodge Challenger SRT high-performance mechanical maintenance" width="800" height="500"/>
               <span className="curated-badge">
                 <Sparkles size={14}/> Performance Mechanical Care
               </span>
@@ -93,7 +93,7 @@ export default function GalleryPage() {
 
           <div className="curated-gallery-card">
             <div className="curated-img-frame">
-              <SafeImage src="/images/exterior.webp" alt="Touchless foam wash and headlight restoration" width="800" height="500"/>
+              <SafeImage src="/images/ford-mustang-gt.jpg" alt="Red Ford Mustang GT touchless foam wash and exterior rejuvenation" width="800" height="500"/>
               <span className="curated-badge">
                 <Sparkles size={14}/> Deep Exterior Studio Rejuvenation
               </span>

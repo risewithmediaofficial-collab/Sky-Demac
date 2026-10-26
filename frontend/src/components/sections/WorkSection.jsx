@@ -61,8 +61,8 @@ export default function WorkSection() {
         <div className="work-layout">
           <div className="work-image">
             <SafeImage
-              src="/images/detailing.webp"
-              alt="Illustrative close-up of light tracing the bonnet of a graphite coupe"
+              src="/images/ferrari-red-studio.jpg"
+              alt="Rosso Corsa Ferrari in precision detailing studio"
               width="1000"
               height="1000"
               loading="lazy"

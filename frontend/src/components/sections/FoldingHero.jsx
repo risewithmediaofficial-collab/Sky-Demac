@@ -6,11 +6,11 @@ import SafeImage from "../common/SafeImage";
 
 const protectionEnabled = ["ppf", "ceramic-coating", "specialised-coating"].some(isServiceActive);
 const scenes = [
-  { id: "opening", label: "The opening", eyebrow: "PRECISION ENGINEERING.", copy: "Bespoke automotive care. Masterful precision.", image: "/images/scene-wide.webp" },
-  { id: "mechanical", label: "Mechanical care", eyebrow: "02 / MECHANICAL CARE", title: "Precision in every service.", copy: "A closer look. A clearer understanding.", image: "/images/scene-wheel.webp" },
-  { id: "detailing", label: "The finer details", eyebrow: "03 / THE FINER DETAILS", title: "Every detail. Refined.", copy: "A considered approach to every surface.", image: "/images/scene-detail.webp" },
-  { id: "exterior", label: protectionEnabled ? "Paint protection" : "Exterior care", eyebrow: protectionEnabled ? "04 / PAINT PROTECTION" : "04 / EXTERIOR CARE", title: protectionEnabled ? "Protect every finish." : "Care for every curve.", copy: protectionEnabled ? "An illustrative study in surface protection." : "Thoughtful care, down to the finish.", image: "/images/scene-exterior.webp" },
-  { id: "complete", label: "Complete care", eyebrow: "05 / COMPLETE AUTOMOTIVE CARE", title: "Complete care. One destination.", copy: "For the everyday drive. And everything that drives you.", image: "/images/scene-wide.webp" },
+  { id: "opening", label: "The opening", eyebrow: "PRECISION ENGINEERING.", copy: "Bespoke automotive care. Masterful precision.", image: "/images/ford-mustang-gt.jpg" },
+  { id: "mechanical", label: "Mechanical care", eyebrow: "02 / MECHANICAL CARE", title: "Precision in every service.", copy: "A closer look. A clearer understanding.", image: "/images/dodge-challenger-workshop.jpg" },
+  { id: "detailing", label: "The finer details", eyebrow: "03 / THE FINER DETAILS", title: "Every detail. Refined.", copy: "A considered approach to every surface.", image: "/images/ferrari-red-studio.jpg" },
+  { id: "exterior", label: protectionEnabled ? "Paint protection" : "Exterior care", eyebrow: protectionEnabled ? "04 / PAINT PROTECTION" : "04 / EXTERIOR CARE", title: protectionEnabled ? "Protect every finish." : "Care for every curve.", copy: protectionEnabled ? "An illustrative study in surface protection." : "Thoughtful care, down to the finish.", image: "/images/mustang-track-red.jpg" },
+  { id: "complete", label: "Complete care", eyebrow: "05 / COMPLETE AUTOMOTIVE CARE", title: "Complete care. One destination.", copy: "For the everyday drive. And everything that drives you.", image: "/images/ferrari-red-action.jpg" },
 ];
 
 const clamp = (value) => Math.max(0, Math.min(1, value));
@@ -579,10 +579,15 @@ export default function FoldingHero() {
                 <path d="M18 8a2 2 0 0 1 4 4v4a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 17" />
               </svg>
             </span>
-            <span className="hint-label">
-              <span className="hint-label-mobile">SWIPE SIDEWAYS TO EXPLORE</span>
-              <span className="hint-label-desktop">DRAG OR SCROLL SIDEWAYS TO EXPLORE</span>
-            </span>
+            <div className="hint-label-stack">
+              <span className="hint-label">
+                <span className="hint-label-mobile">SWIPE SIDEWAYS TO EXPLORE</span>
+                <span className="hint-label-desktop">DRAG OR SCROLL SIDEWAYS TO EXPLORE</span>
+              </span>
+              <span className="hint-chapter-status-mobile" aria-hidden="true">
+                0{activeIndex + 1} / 05 · {scenes[activeIndex].label}
+              </span>
+            </div>
             <span className="hint-chevron hint-chevron-right" aria-hidden="true">
               <ChevronRight size={15} />
             </span>

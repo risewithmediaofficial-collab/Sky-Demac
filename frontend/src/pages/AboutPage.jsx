@@ -59,7 +59,7 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="about-image-card">
-            <SafeImage src="/images/hero.webp" alt="SKY DEMAC workshop vehicle" width="600" height="400"/>
+            <SafeImage src="/images/ferrari-red-action.jpg" alt="SKY DEMAC high-performance vehicle care" width="600" height="400"/>
           </div>
         </div>
 
