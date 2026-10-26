@@ -21,9 +21,14 @@
     <link
       rel="preload"
       as="image"
-      href="/images/hero.webp"
-      imagesrcset="/images/hero-mobile.webp 800w, /images/hero.webp 1805w"
-      imagesizes="100vw"
+      href="/wheel-hero/hero-background.webp"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/wheel-hero/frames/wheel-00.webp"
+      fetchpriority="high"
     />
     <link
       rel="preload"
@@ -39,8 +44,136 @@
       rel="stylesheet"
     />
     <title>%BUSINESS_TITLE%</title>
+    <style>
+      #initial-splash-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: #090909;
+        z-index: 99999999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        user-select: none;
+      }
+      .initial-splash-wheel-box {
+        position: fixed;
+        left: 50%;
+        top: 48%;
+        transform: translate(-50%, -50%);
+        width: clamp(190px, 24vw, 260px);
+        height: clamp(190px, 24vw, 260px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .initial-splash-glow {
+        position: absolute;
+        inset: -20%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(227, 30, 36, 0.3) 0%, rgba(227, 30, 36, 0.06) 50%, transparent 70%);
+        filter: blur(32px);
+        pointer-events: none;
+      }
+      .initial-splash-wheel {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .initial-splash-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        clip-path: circle(49.4% at 50% 50%);
+        -webkit-clip-path: circle(49.4% at 50% 50%);
+      }
+      .initial-splash-branding {
+        position: fixed;
+        left: 50%;
+        bottom: 14%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      .initial-splash-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        letter-spacing: 0.26em;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.9);
+        text-transform: uppercase;
+      }
+      .initial-splash-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #e31e24;
+      }
+      .initial-splash-subtitle {
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        color: #a3a3a3;
+        text-transform: uppercase;
+      }
+      .initial-splash-line {
+        width: clamp(144px, 18vw, 176px);
+        height: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 9999px;
+        overflow: hidden;
+        margin-top: 8px;
+        position: relative;
+      }
+      .initial-splash-line-bar {
+        width: 15%;
+        height: 100%;
+        border-radius: 9999px;
+        background: linear-gradient(90deg, #e31e24 0%, #ff4d52 100%);
+        box-shadow: 0 0 8px rgba(227, 30, 36, 0.8);
+      }
+    </style>
   </head>
   <body>
+    <div id="initial-splash-overlay">
+      <div class="initial-splash-wheel-box">
+        <div class="initial-splash-glow"></div>
+        <div class="initial-splash-wheel">
+          <img
+            src="/wheel-hero/frames/wheel-00.webp"
+            alt="Porsche Wheel"
+            class="initial-splash-img"
+          />
+        </div>
+      </div>
+      <div class="initial-splash-branding">
+        <div class="initial-splash-title">
+          <span class="initial-splash-dot"></span>
+          <span>SKY DEMAC AUTOMOTIVE</span>
+        </div>
+        <span class="initial-splash-subtitle">Built for the Pressure</span>
+        <div class="initial-splash-line">
+          <div class="initial-splash-line-bar"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      if (window.location.pathname !== '/' && window.location.pathname !== '') {
+        var splash = document.getElementById('initial-splash-overlay');
+        if (splash) splash.remove();
+      }
+    </script>
     <div id="root"></div>
     <noscript
       ><p>

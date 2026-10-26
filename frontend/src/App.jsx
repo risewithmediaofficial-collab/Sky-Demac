@@ -4,7 +4,7 @@ import { business } from "./config";
 import { Layout } from "./components/layout";
 import { SmoothScroll } from "./components/common";
 
-const HomePage = lazy(() => import("./pages/HomePage"));
+import HomePage from "./pages/HomePage";
 const ServicesOverviewPage = lazy(() => import("./pages/ServicesOverviewPage"));
 const ServicePage = lazy(() => import("./pages/ServicePage"));
 const GalleryPage = lazy(() => import("./pages/GalleryPage"));

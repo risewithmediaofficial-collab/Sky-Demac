@@ -32,6 +32,16 @@ export default function WheelLoader({ onFinish }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Remove static HTML splash overlay from index.html so WheelLoader takes over seamlessly
+    const staticSplash = document.getElementById("initial-splash-overlay");
+    if (staticSplash) {
+      staticSplash.remove();
+    }
+
+    // Lock page scroll during loader so lower website sections can never be scrolled to
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     // Preload background image and all 36 frames immediately
     const bg = new Image();
     bg.src = "/wheel-hero/hero-background.webp";
@@ -102,6 +112,7 @@ export default function WheelLoader({ onFinish }) {
 
     // At 2.0s: finish loading, hero section takes over seamlessly
     const finishTimer = setTimeout(() => {
+      document.body.style.overflow = prevOverflow;
       if (onFinish) onFinish();
     }, TOTAL_LOADER_TIME);
 
@@ -112,6 +123,7 @@ export default function WheelLoader({ onFinish }) {
     }, TOTAL_LOADER_TIME + 150);
 
     return () => {
+      document.body.style.overflow = prevOverflow;
       if (rafId) cancelAnimationFrame(rafId);
       clearTimeout(dockTimer);
       clearTimeout(finishTimer);
