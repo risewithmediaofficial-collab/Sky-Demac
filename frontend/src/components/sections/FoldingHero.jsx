@@ -3,10 +3,18 @@ import { Link } from "react-router-dom";
 import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { isServiceActive } from "../../config";
 import SafeImage from "../common/SafeImage";
+import SpinningWheelArt from "./SpinningWheelArt";
+
+const FRAME_COUNT = 36;
+const FRAME_RATE = 24;
+const FRAME_INTERVAL = 1000 / FRAME_RATE;
+const wheelFrames = Array.from({ length: FRAME_COUNT }, (_, i) =>
+  `/wheel-hero/frames/wheel-${String(i).padStart(2, "0")}.webp`
+);
 
 const protectionEnabled = ["ppf", "ceramic-coating", "specialised-coating"].some(isServiceActive);
 const scenes = [
-  { id: "opening", label: "The opening", eyebrow: "PRECISION ENGINEERING.", copy: "Bespoke automotive care. Masterful precision.", image: "/images/ford-mustang-gt.jpg" },
+  { id: "opening", label: "The opening", eyebrow: "PRECISION ENGINEERING.", copy: "Bespoke automotive care. Masterful precision.", image: "/wheel-hero/hero-background.webp" },
   { id: "mechanical", label: "Mechanical care", eyebrow: "02 / MECHANICAL CARE", title: "Precision in every service.", copy: "A closer look. A clearer understanding.", image: "/images/dodge-challenger-workshop.jpg" },
   { id: "detailing", label: "The finer details", eyebrow: "03 / THE FINER DETAILS", title: "Every detail. Refined.", copy: "A considered approach to every surface.", image: "/images/ferrari-red-studio.jpg" },
   { id: "exterior", label: protectionEnabled ? "Paint protection" : "Exterior care", eyebrow: protectionEnabled ? "04 / PAINT PROTECTION" : "04 / EXTERIOR CARE", title: protectionEnabled ? "Protect every finish." : "Care for every curve.", copy: protectionEnabled ? "An illustrative study in surface protection." : "Thoughtful care, down to the finish.", image: "/images/mustang-track-red.jpg" },
@@ -19,21 +27,25 @@ const ease = (value) => {
   return n * n * (3 - 2 * n);
 };
 
-function PanelArt({ side }) {
+function PanelArt({ side, wheelRef }) {
   return (
     <div className="fold-phone-art-stack" aria-hidden="true">
       {scenes.map((scene, index) => (
         <div className="fold-phone-art" data-art={index} key={`${side}-${scene.id}`}>
-          <SafeImage
-            src={scene.image}
-            className={`fold-phone-image fold-phone-image-${side}`}
-            alt=""
-            width="1805"
-            height="871"
-            loading={index <= 1 ? "eager" : "lazy"}
-            fetchPriority={index === 0 ? "high" : "auto"}
-            decoding="async"
-          />
+          {index === 0 ? (
+            <SpinningWheelArt side={side} wheelRef={wheelRef} />
+          ) : (
+            <SafeImage
+              src={scene.image}
+              className={`fold-phone-image fold-phone-image-${side}`}
+              alt=""
+              width="1805"
+              height="871"
+              loading={index <= 1 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              decoding="async"
+            />
+          )}
         </div>
       ))}
     </div>
@@ -70,7 +82,7 @@ function Caption({ index }) {
   );
 }
 
-export default function FoldingHero() {
+export default function FoldingHero({ isLoaded = false }) {
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -83,6 +95,10 @@ export default function FoldingHero() {
   const lastActiveRef = useRef(-1);
   const hasInteractedRef = useRef(false);
   const requestLoopRef = useRef(null);
+
+  // Spinning Wheel Frame Animation Refs (DOM direct updates, 0 React re-renders)
+  const leftWheelRef = useRef(null);
+  const rightWheelRef = useRef(null);
 
   // Gesture tracking
   const isTouchActiveRef = useRef(false);
@@ -288,11 +304,6 @@ export default function FoldingHero() {
     const render = (rawProgress) => {
       const progress = clamp(rawProgress);
 
-      // Unfold phone during the initial opening (progress 0.0 to 0.20)
-      const unfoldEnd = 0.20;
-      const unfoldFraction = clamp(progress / unfoldEnd);
-      const initialOpen = ease(unfoldFraction);
-
       // Chapters transition
       const numChapters = scenes.length;
       const span = progress * (numChapters - 1);
@@ -315,13 +326,10 @@ export default function FoldingHero() {
       }
 
       const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-      const maxInitialAngle = isMobile ? 54 : 64;
-      const baseLeftAngle = (1 - initialOpen) * maxInitialAngle;
 
-      // Authentic iPhone fold from the center crease:
-      // When changing, left and right panels fold symmetrically inward from center by up to 44deg!
+      // Authentic iPhone fold from center crease ONLY during chapter transitions (NO fold on initial launch):
       const centerFoldAngle = foldFactor * (isMobile ? 36 : 44);
-      const totalLeftAngle = baseLeftAngle + centerFoldAngle;
+      const totalLeftAngle = centerFoldAngle;
       const totalRightAngle = -centerFoldAngle;
 
       // Motion blur during the center fold - bypassed on touch/mobile devices for 60fps performance
@@ -331,12 +339,12 @@ export default function FoldingHero() {
           window.matchMedia("(pointer: coarse)").matches);
       const foldBlur = isTouchOrCoarse ? 0 : foldFactor * 16;
 
-      const phoneScale = (0.88 + initialOpen * 0.12 - foldFactor * 0.05).toFixed(4);
-      const phoneShift = isMobile ? "0%" : `${((1 - initialOpen) * -16).toFixed(2)}%`;
-      const shadowAlpha = (0.32 + initialOpen * 0.38 + foldFactor * 0.22).toFixed(4);
-      const shadowScale = (0.72 + initialOpen * 0.28).toFixed(4);
+      const phoneScale = (1 - foldFactor * 0.05).toFixed(4);
+      const phoneShift = "0%";
+      const shadowAlpha = (0.7 + foldFactor * 0.22).toFixed(4);
+      const shadowScale = (1 - foldFactor * 0.08).toFixed(4);
 
-      root.style.setProperty("--phone-open", initialOpen.toFixed(4));
+      root.style.setProperty("--phone-open", "1");
       root.style.setProperty("--phone-angle", `${totalLeftAngle.toFixed(2)}deg`);
       root.style.setProperty("--phone-left-angle", `${totalLeftAngle.toFixed(2)}deg`);
       root.style.setProperty("--phone-right-angle", `${totalRightAngle.toFixed(2)}deg`);
@@ -456,29 +464,103 @@ export default function FoldingHero() {
 
     requestLoop();
 
-    // Subtle teaser nudge after 800ms to invite side exploration if user has not interacted
-    const teaserTimer = setTimeout(() => {
-      if (!hasInteractedRef.current && targetProgressRef.current === 0) {
-        targetProgressRef.current = 0.07;
-        requestLoop();
-        setTimeout(() => {
-          if (!hasInteractedRef.current && targetProgressRef.current === 0.07) {
-            targetProgressRef.current = 0;
-            requestLoop();
-          }
-        }, 750);
-      }
-    }, 900);
-
     return () => {
       observer.disconnect();
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
-      clearTimeout(teaserTimer);
       requestLoopRef.current = null;
     };
   }, []);
+
+  // Exactly 10-second wheel spin animation loop
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (typeof window === "undefined") return;
+    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReducedMotion) return;
+
+    // Preload background image and all 36 frames into browser cache
+    const bgImg = new Image();
+    bgImg.src = "/wheel-hero/hero-background.webp";
+
+    wheelFrames.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    let wheelRafId = null;
+    const startTime = performance.now();
+    const WHEEL_DURATION = 10000; // Exactly 10 seconds
+    let lastTime = startTime;
+    let currentFrame = 0;
+    let isVisible = true;
+
+    const setFrameSource = (idx) => {
+      const src = wheelFrames[idx];
+      const leftEl = leftWheelRef.current;
+      const rightEl = rightWheelRef.current;
+      if (leftEl) {
+        leftEl.setAttribute("href", src);
+        leftEl.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", src);
+      }
+      if (rightEl) {
+        rightEl.setAttribute("href", src);
+        rightEl.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", src);
+      }
+    };
+
+    const animateWheel = (now) => {
+      // Pause processing when off-screen
+      if (!isVisible) {
+        wheelRafId = requestAnimationFrame(animateWheel);
+        return;
+      }
+
+      // Idle when navigated far away from Scene 0 to save mobile GPU/CPU
+      if (currentProgressRef.current > 0.35) {
+        wheelRafId = requestAnimationFrame(animateWheel);
+        lastTime = now;
+        return;
+      }
+
+      const totalElapsed = now - startTime;
+      if (totalElapsed >= WHEEL_DURATION) {
+        // 10 seconds completed: cleanly freeze on final frame and stop RAF
+        setFrameSource(currentFrame);
+        return;
+      }
+
+      const elapsed = now - lastTime;
+      if (elapsed >= FRAME_INTERVAL) {
+        const steps = Math.floor(elapsed / FRAME_INTERVAL);
+        currentFrame = (currentFrame + steps) % FRAME_COUNT;
+        lastTime = now - (elapsed % FRAME_INTERVAL);
+        setFrameSource(currentFrame);
+      }
+
+      wheelRafId = requestAnimationFrame(animateWheel);
+    };
+
+    // Viewport intersection observer to completely halt loop when offscreen
+    const heroObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+
+    if (sectionRef.current) {
+      heroObserver.observe(sectionRef.current);
+    }
+
+    wheelRafId = requestAnimationFrame(animateWheel);
+
+    return () => {
+      if (wheelRafId) cancelAnimationFrame(wheelRafId);
+      heroObserver.disconnect();
+    };
+  }, [isLoaded]);
 
   return (
     <section
@@ -526,7 +608,7 @@ export default function FoldingHero() {
         <div className="fold-phone" data-state="closed" aria-label="A folding phone opens to reveal automotive work">
           <div className="fold-phone-panel fold-phone-left">
             <div className="fold-phone-screen">
-              <PanelArt side="left" />
+              <PanelArt side="left" wheelRef={leftWheelRef} />
             </div>
             <span className="fold-phone-speaker" aria-hidden="true" />
             <span className="fold-phone-button fold-phone-button-left" aria-hidden="true" />
@@ -534,7 +616,7 @@ export default function FoldingHero() {
 
           <div className="fold-phone-panel fold-phone-right">
             <div className="fold-phone-screen">
-              <PanelArt side="right" />
+              <PanelArt side="right" wheelRef={rightWheelRef} />
             </div>
             <span className="fold-phone-camera" aria-hidden="true" />
             <span className="fold-phone-button fold-phone-button-right" aria-hidden="true" />

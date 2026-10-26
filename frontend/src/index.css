@@ -4709,6 +4709,86 @@ svg {
   background: rgba(190, 198, 210, 0.65);
 }
 
+/* =====================================================
+   CLEAN RECTANGULAR HERO DISPLAY (NO 3D FOLD)
+   ===================================================== */
+.hero-display-card {
+  position: absolute;
+  left: 50%;
+  top: 51%;
+  width: clamp(560px, 52vw, 840px);
+  aspect-ratio: 16 / 9;
+  transform: translate(-50%, -50%);
+  border-radius: clamp(16px, 1.8vw, 24px);
+  overflow: hidden;
+  z-index: 3;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 24px 60px -12px rgba(0, 0, 0, 0.8),
+    0 0 35px rgba(227, 30, 36, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: #090b0d;
+}
+
+.hero-display-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.hero-display-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-display-art.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero-display-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 1080px) {
+  .hero-display-card {
+    top: 59%;
+    width: min(86vw, 680px);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-display-card {
+    top: 58% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: min(92vw, 400px) !important;
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-display-card {
+    top: 57% !important;
+    width: min(92vw, 350px) !important;
+    border-radius: 14px !important;
+  }
+}
+
 .fold-phone {
   position: absolute;
   left: 50%;

@@ -1,4 +1,6 @@
 export { default as FoldingHero } from "./FoldingHero";
+export { default as HeroSection } from "./FoldingHero";
+export { default as AnimatedHeroWheel } from "./AnimatedHeroWheel";
 export { default as BrandStrip } from "./BrandStrip";
 export { default as ServicesSection } from "./ServicesSection";
 export { default as WorkSection } from "./WorkSection";
