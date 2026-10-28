@@ -5224,12 +5224,12 @@ label {
   height: 82px;
   max-height: 86px;
   width: auto;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 14px rgba(227, 30, 36, 0.42));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
 }
 
 .site-header .brand:hover .brand-logo-header {
-  transform: scale(1.04);
-  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 20px rgba(227, 30, 36, 0.55));
+  transform: scale(1.03);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
 .site-header .navigation a:hover,
@@ -5630,7 +5630,6 @@ textarea {
   align-items: center;
 }
 
-.site-header .brand,
 .site-header .navigation > a,
 .site-header .nav-dropdown-head,
 .site-header .menu-toggle {
@@ -5649,6 +5648,18 @@ textarea {
   min-height: 86px;
   padding: 4px 16px;
   border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.06);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.site-header .brand:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.22), 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .site-header .navigation {
