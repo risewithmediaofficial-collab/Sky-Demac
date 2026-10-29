@@ -134,7 +134,18 @@ export default function Footer() {
         {/* Footer Meta & Socials */}
         <div className="footer-bottom">
           <span>© {year} SKY DEMAC AUTOMOTIVE</span>
-          <span>Considered care. Every kilometre.</span>
+          <span className="footer-credit">
+            Developed by{" "}
+            <a
+              href="https://risewithmedia.com"
+              target="_blank"
+              rel="noreferrer"
+              className="footer-credit-link"
+            >
+              risewithmedia.com
+              <ArrowUpRight size={11} />
+            </a>
+          </span>
           <div>
             <a
               href={business.instagramUrl}
