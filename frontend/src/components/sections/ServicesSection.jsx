@@ -232,20 +232,20 @@ export default function ServicesSection() {
         <div className="section-heading services-modern-heading">
           <div>
             <div className="modern-pill-badge">
-              <span className="pill-dot" /> MULTI-BRAND CAR CARE • PRECISION DIRECTORY
+              <span className="pill-dot" /> MULTI-BRAND CAR CARE • KRISHNAGIRI SHOWROOM
             </div>
             <h2 className="modern-display-heading">
-              <span>FIVE WAYS WE</span>
+              <span>OUR CAR DETAILING</span>
               <span className="heading-inline-group">
                 <span className="tilted-pill-badge">CERTIFIED STUDIO</span>
-                <span className="accent-text">CARE FOR YOUR CAR</span>
+                <span className="accent-text">& CARE SERVICES</span>
               </span>
             </h2>
           </div>
           <div className="heading-aside">
             <p>
-              From the way it drives to the way it looks, start with the care
-              your car needs today.
+              From 9H ceramic coating and PPF paint protection to precision
+              mechanical maintenance and deep interior detailing in Krishnagiri.
             </p>
             <Link to="/services" className="button button-dark">
               Explore All 9 Departments <ArrowUpRight size={17} />

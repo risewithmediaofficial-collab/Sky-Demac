@@ -9,7 +9,7 @@ export default function BookServicePage() {
     const preselectedService = searchParams.get("service");
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
-        document.title = `Book a Service | ${business.name}`;
+        document.title = `Book Car Detailing & Service in Krishnagiri | SkyDemac`;
     }, []);
     return (<div className="book-service-page">
       <div className="service-page-hero">

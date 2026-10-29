@@ -28,7 +28,7 @@ const getCategoryIcon = (id) => {
 export default function ServicesOverviewPage() {
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
-        document.title = `Services Directory | ${business.name}`;
+        document.title = `Car Detailing & Automotive Services in Krishnagiri | SkyDemac`;
     }, []);
     return (
       <div className="services-overview-page">

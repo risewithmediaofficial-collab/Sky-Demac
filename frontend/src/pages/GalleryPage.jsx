@@ -27,7 +27,7 @@ export default function GalleryPage() {
     const projects = business.projects;
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
-        document.title = `Gallery – Our Work | ${business.name}`;
+        document.title = `Car Detailing Work & Gallery in Krishnagiri | SkyDemac`;
     }, []);
     return (<div className="gallery-page-view">
       <div className="service-page-hero">

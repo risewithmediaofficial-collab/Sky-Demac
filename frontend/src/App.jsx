@@ -90,6 +90,28 @@ export default function App() {
                 path="/additional-services"
                 element={<ServicePage forcedCategory={business.categories[8]} />}
               />
+              {/* Local SEO Landing Routes for Krishnagiri */}
+              <Route
+                path="/ceramic-coating-krishnagiri"
+                element={<ServicePage forcedCategory={business.categories[1]} />}
+              />
+              <Route
+                path="/ppf-coating-krishnagiri"
+                element={<ServicePage forcedCategory={business.categories[1]} />}
+              />
+              <Route
+                path="/car-wash-krishnagiri"
+                element={<ServicePage forcedCategory={business.categories[2]} />}
+              />
+              <Route
+                path="/car-polishing-krishnagiri"
+                element={<ServicePage forcedCategory={business.categories[1]} />}
+              />
+              <Route
+                path="/car-interior-detailing-krishnagiri"
+                element={<ServicePage forcedCategory={business.categories[1]} />}
+              />
+              <Route path="/car-detailing-gallery" element={<GalleryPage />} />
               <Route path="/services/:slug" element={<ServicePage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/our-work" element={<GalleryPage />} />

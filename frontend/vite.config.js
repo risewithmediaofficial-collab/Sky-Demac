@@ -29,6 +29,12 @@ export default defineConfig({
               escapeHtml(business.seo.description),
             )
             .replaceAll(
+              "%BUSINESS_KEYWORDS%",
+              escapeHtml(
+                business.seo.keywords ? business.seo.keywords.join(", ") : "",
+              ),
+            )
+            .replaceAll(
               "%BUSINESS_SUPPORT%",
               escapeHtml(business.supportingLine),
             )

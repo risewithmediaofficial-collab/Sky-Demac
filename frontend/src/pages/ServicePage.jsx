@@ -37,7 +37,7 @@ export default function ServicePage({ forcedCategory }) {
         business.categories[0];
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
-        document.title = `${category.title} | ${business.name}`;
+        document.title = `${category.title} in Krishnagiri | SkyDemac`;
     }, [category]);
     return (<div className="service-page-view">
       {/* Page Breadcrumb & Top Bar */}

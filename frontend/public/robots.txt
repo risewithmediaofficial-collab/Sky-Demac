@@ -1,0 +1,6 @@
+# Robots.txt for SkyDemac Automotive (https://skydemac.com)
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://skydemac.com/sitemap.xml

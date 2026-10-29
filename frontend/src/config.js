@@ -25,8 +25,8 @@ export const business = {
         { label: "Instagram", url: "https://www.instagram.com/sky.demac?psln=MTB3N3o0YzJlNnA5Yw%3D%3D&utm_source=qr" }
     ],
     catalogueSource: null,
-    launchReady: false,
-    processConfirmed: false,
+    launchReady: true,
+    processConfirmed: true,
     studioImage: "/images/dodge-challenger-workshop.jpg",
     multiBrandNotice: "Multi-brand car care • Mechanical • Detailing • Paint Protection",
     operationalNote: "Publish only the services currently available at your workshop. Add services such as PPF, painting booth, wheel alignment, AC repair or dry ice cleaning when the required equipment, staff and facilities are ready.",
@@ -43,9 +43,27 @@ export const business = {
         { label: "Contact Us", href: "/contact" },
     ],
     seo: {
-        url: "https://sky-demac-automotive.rwmdesigners.chatgpt.site",
-        title: "SKY DEMAC AUTOMOTIVE | Built for the Pressure.",
-        description: "Meet SKY DEMAC AUTOMOTIVE. Complete automotive care, premium detailing and professional maintenance. Explore our approach and prepare a service enquiry.",
+        url: "https://skydemac.com",
+        title: "SkyDemac | Car Detailing & Car Care in Krishnagiri",
+        description: "Looking for car detailing in Krishnagiri? SkyDemac offers premium car detailing, 9H ceramic coating, self-healing PPF paint protection, foam wash, interior deep cleaning & paint correction. Enquire or book today.",
+        keywords: [
+            "car detailing in Krishnagiri",
+            "car detailing Krishnagiri",
+            "ceramic coating in Krishnagiri",
+            "car ceramic coating Krishnagiri",
+            "PPF coating in Krishnagiri",
+            "paint protection film Krishnagiri",
+            "car wash in Krishnagiri",
+            "car polishing in Krishnagiri",
+            "car interior cleaning in Krishnagiri",
+            "car spa in Krishnagiri",
+            "car paint protection in Krishnagiri",
+            "car detailing showroom in Krishnagiri",
+            "best car detailing in Krishnagiri",
+            "SkyDemac",
+            "SkyDemac Krishnagiri",
+            "SkyDemac car detailing"
+        ],
     },
     categories: [
         {

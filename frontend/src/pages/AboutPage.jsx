@@ -6,7 +6,7 @@ import { SafeImage } from "../components/common";
 export default function AboutPage() {
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
-        document.title = `About Us | ${business.name}`;
+        document.title = `About SkyDemac | Car Detailing Showroom in Krishnagiri`;
     }, []);
     return (<div className="about-page-view">
       <div className="service-page-hero">

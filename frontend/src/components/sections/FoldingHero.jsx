@@ -6,11 +6,46 @@ import SafeImage from "../common/SafeImage";
 
 const protectionEnabled = ["ppf", "ceramic-coating", "specialised-coating"].some(isServiceActive);
 const scenes = [
-  { id: "opening", label: "The opening", eyebrow: "PRECISION ENGINEERING.", copy: "Bespoke automotive care. Masterful precision.", image: "/wheel-hero/hero-background.webp" },
-  { id: "mechanical", label: "Mechanical care", eyebrow: "02 / MECHANICAL CARE", title: "Precision in every service.", copy: "A closer look. A clearer understanding.", image: "/images/dodge-challenger-workshop.jpg" },
-  { id: "detailing", label: "The finer details", eyebrow: "03 / THE FINER DETAILS", title: "Every detail. Refined.", copy: "A considered approach to every surface.", image: "/images/ferrari-red-studio.jpg" },
-  { id: "exterior", label: protectionEnabled ? "Paint protection" : "Exterior care", eyebrow: protectionEnabled ? "04 / PAINT PROTECTION" : "04 / EXTERIOR CARE", title: protectionEnabled ? "Protect every finish." : "Care for every curve.", copy: protectionEnabled ? "An illustrative study in surface protection." : "Thoughtful care, down to the finish.", image: "/images/mustang-track-red.jpg" },
-  { id: "complete", label: "Complete care", eyebrow: "05 / COMPLETE AUTOMOTIVE CARE", title: "Complete care. One destination.", copy: "For the everyday drive. And everything that drives you.", image: "/images/ferrari-red-action.jpg" },
+  {
+    id: "opening",
+    label: "Car Detailing in Krishnagiri",
+    eyebrow: "KRISHNAGIRI • CAR DETAILING SHOWROOM",
+    title: "Professional Car Detailing in Krishnagiri",
+    copy: "Krishnagiri's premier car detailing studio. 9H ceramic coating, self-healing PPF paint protection, precision polishing and complete automotive care.",
+    image: "/wheel-hero/hero-background.webp",
+  },
+  {
+    id: "mechanical",
+    label: "Mechanical Care",
+    eyebrow: "02 / PERIODIC SERVICE & MECHANICAL",
+    title: "Precision Car Service in Krishnagiri",
+    copy: "OEM computerized diagnostics, periodic maintenance, brake, clutch and suspension care.",
+    image: "/images/dodge-challenger-workshop.jpg",
+  },
+  {
+    id: "detailing",
+    label: "Ceramic & Polishing",
+    eyebrow: "03 / CERAMIC COATING & POLISHING",
+    title: "Ceramic Coating & Paint Correction in Krishnagiri",
+    copy: "Multi-stage swirl removal, 9H nano-ceramic gloss barrier and deep interior rejuvenation.",
+    image: "/images/ferrari-red-studio.jpg",
+  },
+  {
+    id: "exterior",
+    label: protectionEnabled ? "Paint Protection Film (PPF)" : "Exterior Care",
+    eyebrow: protectionEnabled ? "04 / PPF PAINT PROTECTION FILM" : "04 / EXTERIOR CARE",
+    title: protectionEnabled ? "PPF Coating & Paint Protection Film" : "Exterior Care & Foam Wash",
+    copy: protectionEnabled ? "Shield vehicle panels from stone chips, scratches and UV degradation with optical TPU." : "Thoughtful care, down to the finish.",
+    image: "/images/mustang-track-red.jpg",
+  },
+  {
+    id: "complete",
+    label: "Complete Car Care",
+    eyebrow: "05 / COMPLETE AUTOMOTIVE CARE",
+    title: "Car Interior Deep Cleaning & Car Spa",
+    copy: "From touchless foam wash to deep interior sanitisation. Krishnagiri's destination for fine automobiles.",
+    image: "/images/ferrari-red-action.jpg",
+  },
 ];
 
 const clamp = (value) => Math.max(0, Math.min(1, value));
@@ -49,8 +84,8 @@ function Caption({ index }) {
       </div>
       {index === 0 ? (
         <h1 className="modern-display-heading" style={{ color: "#ffffff" }}>
-          <span style={{ color: "#ffffff" }}>ENGINEERED FOR</span>
-          <span className="accent-text" style={{ color: "#e31e24" }}>PERFORMANCE.</span>
+          <span style={{ color: "#ffffff" }}>CAR DETAILING </span>
+          <span className="accent-text" style={{ color: "#e31e24" }}>IN KRISHNAGIRI.</span>
         </h1>
       ) : (
         <h2 className="modern-display-heading" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", color: "#ffffff" }}>
