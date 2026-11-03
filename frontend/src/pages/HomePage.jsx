@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { business } from "../config";
 import { useSectionReveals } from "../hooks";
 import { WheelLoader } from "../components/common";
-import { FoldingHero, BrandStrip, ServicesSection } from "../components/sections";
+import { FoldingHero, BrandStrip, ServicedBrandsBanner, ServicesSection } from "../components/sections";
 
 /**
  * SKY DEMAC Homepage
@@ -21,6 +21,7 @@ export default function HomePage() {
       <WheelLoader />
       <FoldingHero />
       <BrandStrip />
+      <ServicedBrandsBanner />
       <ServicesSection />
     </>
   );

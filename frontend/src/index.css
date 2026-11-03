@@ -8406,3 +8406,117 @@ textarea {
     margin: 28px 0 20px;
   }
 }
+
+/* =====================================================
+   SERVICED VEHICLE BRANDS BANNER
+   Exact architectural dark card matching brand guidelines
+   ===================================================== */
+.serviced-brands-section {
+  padding-block: clamp(24px, 3.5vw, 44px);
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.serviced-brands-card {
+  position: relative;
+  background: linear-gradient(180deg, #0e1218 0%, #07090d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-cards, 24px);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: clamp(34px, 4.5vw, 50px) clamp(20px, 3.5vw, 44px);
+  text-align: center;
+  overflow: hidden;
+}
+
+.brands-card-ambient-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 60px;
+  background: radial-gradient(ellipse at top, rgba(227, 30, 36, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.brands-card-header {
+  margin-bottom: clamp(24px, 3.2vw, 36px);
+}
+
+.brands-card-title {
+  font-family: var(--font-text, -apple-system, BlinkMacSystemFont, "Inter", sans-serif);
+  font-size: clamp(11px, 1.25vw, 13.5px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #8da2be;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.brands-grid-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2.2vw, 26px);
+}
+
+.brands-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3.5vw, 48px);
+  width: 100%;
+}
+
+.brand-item {
+  font-family: var(--font-text, -apple-system, BlinkMacSystemFont, "Inter", sans-serif);
+  font-size: clamp(15px, 2vw, 23px);
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease, text-shadow 0.2s ease;
+  user-select: none;
+  cursor: default;
+}
+
+.brand-item:hover {
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  text-shadow: 0 0 16px rgba(227, 30, 36, 0.5);
+}
+
+@media (max-width: 768px) {
+  .serviced-brands-section {
+    padding-block: 16px;
+  }
+  
+  .serviced-brands-card {
+    padding: 26px 16px 22px;
+    border-radius: 20px;
+  }
+  
+  .brands-grid-layout {
+    gap: 14px;
+  }
+  
+  .brands-row {
+    gap: 10px 18px;
+  }
+  
+  .brand-item {
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+  
+  .brands-card-title {
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+  }
+}
+

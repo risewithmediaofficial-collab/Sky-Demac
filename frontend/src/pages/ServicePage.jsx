@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, CheckCircle2, ShieldCheck, Wrench, Sparkles, Car, Layers, Cpu, CircleDot, Zap, Gauge, PhoneCall, CalendarCheck, } from "lucide-react";
 import { business } from "../config";
 import { SafeImage } from "../components/common";
+import { ServicedBrandsBanner } from "../components/sections";
 // Icon mapping helper for visual cards
 const getCategoryIcon = (id) => {
     switch (id) {
@@ -117,6 +118,9 @@ export default function ServicePage({ forcedCategory }) {
           </div>
         </div>
       </div>
+
+      {/* Servicing All Indian Road Vehicles & Brands Banner */}
+      <ServicedBrandsBanner />
 
       {/* Visual Service Offerings Grid */}
       <section id="services-catalog" className="section-pad offerings-section">

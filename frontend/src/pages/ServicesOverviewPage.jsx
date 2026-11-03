@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, ShieldCheck, CheckCircle2, CalendarCheck, Wrench, Sparkles, Car, Layers, Cpu, CircleDot, Zap, Gauge, } from "lucide-react";
 import { business } from "../config";
 import { SafeImage } from "../components/common";
+import { ServicedBrandsBanner } from "../components/sections";
 const getCategoryIcon = (id) => {
     switch (id) {
         case "mechanical":
@@ -78,7 +79,12 @@ export default function ServicesOverviewPage() {
               <p>{business.operationalNote}</p>
             </div>
           </div>
+        </div>
 
+        {/* Servicing All Indian Road Vehicles & Brands Banner */}
+        <ServicedBrandsBanner />
+
+        <div className="wrap">
           {/* 9 Categories Grid */}
           <div className="overview-categories-grid">
             {business.categories.map((cat, idx) => (
