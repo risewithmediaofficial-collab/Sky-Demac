@@ -11,7 +11,7 @@ const scenes = [
     label: "Car Detailing in Krishnagiri",
     eyebrow: "KRISHNAGIRI • CAR DETAILING SHOWROOM",
     title: "Professional Car Detailing in Krishnagiri",
-    copy: "Krishnagiri's premier car detailing studio. 9H ceramic coating, self-healing PPF paint protection, precision polishing and complete automotive care.",
+    copy: "Krishnagiri's premier studio for 9H ceramic coating & PPF.",
     image: "/wheel-hero/hero-background.webp",
   },
   {
@@ -19,7 +19,7 @@ const scenes = [
     label: "Mechanical Care",
     eyebrow: "02 / PERIODIC SERVICE & MECHANICAL",
     title: "Precision Car Service in Krishnagiri",
-    copy: "OEM computerized diagnostics, periodic maintenance, brake, clutch and suspension care.",
+    copy: "OEM computerized diagnostics & precision maintenance.",
     image: "/images/dodge-challenger-workshop.jpg",
   },
   {
@@ -27,7 +27,7 @@ const scenes = [
     label: "Ceramic & Polishing",
     eyebrow: "03 / CERAMIC COATING & POLISHING",
     title: "Ceramic Coating & Paint Correction in Krishnagiri",
-    copy: "Multi-stage swirl removal, 9H nano-ceramic gloss barrier and deep interior rejuvenation.",
+    copy: "Multi-stage swirl correction & 9H nano-ceramic gloss.",
     image: "/images/ferrari-red-studio.jpg",
   },
   {
@@ -35,7 +35,7 @@ const scenes = [
     label: protectionEnabled ? "Paint Protection Film (PPF)" : "Exterior Care",
     eyebrow: protectionEnabled ? "04 / PPF PAINT PROTECTION FILM" : "04 / EXTERIOR CARE",
     title: protectionEnabled ? "PPF Coating & Paint Protection Film" : "Exterior Care & Foam Wash",
-    copy: protectionEnabled ? "Shield vehicle panels from stone chips, scratches and UV degradation with optical TPU." : "Thoughtful care, down to the finish.",
+    copy: protectionEnabled ? "Optical TPU film to shield paint from stone chips." : "Precision finish and exterior vehicle protection.",
     image: "/images/mustang-track-red.jpg",
   },
   {
@@ -43,7 +43,7 @@ const scenes = [
     label: "Complete Car Care",
     eyebrow: "05 / COMPLETE AUTOMOTIVE CARE",
     title: "Car Interior Deep Cleaning & Car Spa",
-    copy: "From touchless foam wash to deep interior sanitisation. Krishnagiri's destination for fine automobiles.",
+    copy: "Touchless foam wash & deep interior sanitisation.",
     image: "/images/ferrari-red-action.jpg",
   },
 ];
@@ -88,7 +88,7 @@ function Caption({ index }) {
           <span className="accent-text" style={{ color: "#e31e24" }}>IN KRISHNAGIRI.</span>
         </h1>
       ) : (
-        <h2 className="modern-display-heading" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", color: "#ffffff" }}>
+        <h2 className="modern-display-heading" style={{ color: "#ffffff" }}>
           {scene.title}
         </h2>
       )}

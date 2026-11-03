@@ -44,3 +44,4 @@ export default function ServicedBrandsBanner({ className = "" }) {
     </section>
   );
 }
+
