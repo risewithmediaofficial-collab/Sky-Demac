@@ -79,9 +79,6 @@ function Caption({ index }) {
   const scene = scenes[index];
   return (
     <div className="caption-plain">
-      <div className="modern-pill-badge">
-        <span className="pill-dot" /> {scene.eyebrow}
-      </div>
       {index === 0 ? (
         <h1 className="modern-display-heading" style={{ color: "#ffffff" }}>
           <span style={{ color: "#ffffff" }}>CAR DETAILING </span>
