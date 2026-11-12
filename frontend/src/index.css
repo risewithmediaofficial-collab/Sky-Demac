@@ -7278,11 +7278,11 @@ textarea {
   }
 
   .cinema-caption {
-    top: 96px !important;
+    top: 94px !important;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
-    width: min(92vw, 380px) !important;
+    width: min(92vw, 440px) !important;
     max-width: 100% !important;
     padding: 0 !important;
     background: transparent !important;
@@ -7334,17 +7334,17 @@ textarea {
   }
 
   .cinema-caption .modern-pill-badge {
-    margin-bottom: 5px !important;
-    font-size: 10.5px !important;
-    padding: 3px 11px !important;
+    margin-bottom: 8px !important;
+    font-size: 11.5px !important;
+    padding: 4px 13px !important;
     letter-spacing: 0.08em !important;
   }
 
   .cinema-caption .modern-display-heading {
-    font-size: clamp(21px, 6vw, 26px) !important;
-    line-height: 1.06 !important;
-    letter-spacing: -0.015em !important;
-    margin-bottom: 6px !important;
+    font-size: clamp(30px, 6.2vw, 40px) !important;
+    line-height: 1.0 !important;
+    letter-spacing: 0.01em !important;
+    margin-bottom: 8px !important;
     align-items: center;
     text-align: center;
     display: flex;
@@ -7361,11 +7361,11 @@ textarea {
   }
 
   .cinema-caption .cinema-support {
-    font-size: clamp(12px, 3.2vw, 13px) !important;
-    line-height: 1.35 !important;
-    color: rgba(255, 255, 255, 0.72) !important;
-    max-width: 32ch !important;
-    margin: 0 auto 10px auto !important;
+    font-size: clamp(14.5px, 3.2vw, 16px) !important;
+    line-height: 1.4 !important;
+    color: rgba(255, 255, 255, 0.78) !important;
+    max-width: 36ch !important;
+    margin: 0 auto 12px auto !important;
     text-align: center !important;
     display: block !important;
   }
@@ -7375,16 +7375,16 @@ textarea {
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 8px !important;
+    gap: 10px !important;
     flex-wrap: nowrap !important;
     width: 100% !important;
   }
 
   .cinema-caption .cinema-actions .button,
   .cinema-caption .cinema-actions .button-primary {
-    font-size: 11.5px !important;
-    padding: 7px 15px !important;
-    min-height: 35px !important;
+    font-size: 13px !important;
+    padding: 8px 18px !important;
+    min-height: 38px !important;
     border-radius: 99px !important;
     white-space: nowrap !important;
     display: inline-flex !important;
@@ -7393,9 +7393,9 @@ textarea {
   }
 
   .cinema-caption .cinema-actions .cinema-secondary {
-    font-size: 11.5px !important;
-    padding: 7px 15px !important;
-    min-height: 35px !important;
+    font-size: 13px !important;
+    padding: 8px 18px !important;
+    min-height: 38px !important;
     border-radius: 99px !important;
     background: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -7408,7 +7408,7 @@ textarea {
 
   .fold-phone {
     left: 50% !important;
-    top: calc(50% + 38px) !important;
+    top: calc(50% + 56px) !important;
     transform: translate(-50%, -50%) scale(var(--phone-scale)) !important;
     width: min(86vw, 340px) !important;
     aspect-ratio: 16 / 9.5 !important;
@@ -7469,43 +7469,44 @@ textarea {
 
 @media (max-width: 640px) {
   .cinema-caption {
-    top: 92px !important;
-    width: min(92vw, 340px) !important;
+    top: 88px !important;
+    width: min(92vw, 370px) !important;
   }
 
   .cinema-caption .modern-pill-badge {
-    margin-bottom: 4px !important;
-    font-size: 10px !important;
-    padding: 2.5px 9px !important;
+    margin-bottom: 6px !important;
+    font-size: 11px !important;
+    padding: 3.5px 12px !important;
   }
 
   .cinema-caption .modern-display-heading {
-    font-size: clamp(19px, 5.5vw, 23px) !important;
-    line-height: 1.08 !important;
-    margin-bottom: 5px !important;
+    font-size: clamp(28px, 8.2vw, 35px) !important;
+    line-height: 1.0 !important;
+    letter-spacing: 0.01em !important;
+    margin-bottom: 7px !important;
   }
 
   .cinema-caption .cinema-support {
-    font-size: 11.5px !important;
-    line-height: 1.35 !important;
-    margin: 0 auto 9px auto !important;
-    max-width: 30ch !important;
+    font-size: clamp(13.5px, 3.7vw, 15px) !important;
+    line-height: 1.4 !important;
+    margin: 0 auto 11px auto !important;
+    max-width: 34ch !important;
   }
 
   .cinema-caption .cinema-actions {
-    gap: 7px !important;
+    gap: 8px !important;
   }
 
   .cinema-caption .cinema-actions .button,
   .cinema-caption .cinema-actions .button-primary,
   .cinema-caption .cinema-actions .cinema-secondary {
-    font-size: 11px !important;
-    padding: 6.5px 13px !important;
-    min-height: 33px !important;
+    font-size: 12.5px !important;
+    padding: 7.5px 16px !important;
+    min-height: 36px !important;
   }
 
   .fold-phone {
-    top: calc(50% + 32px) !important;
+    top: calc(50% + 52px) !important;
     width: min(86vw, 315px) !important;
     aspect-ratio: 16 / 9.5 !important;
   }
@@ -7766,7 +7767,7 @@ textarea {
   .hero-side-btn {
     width: 38px;
     height: 38px;
-    top: calc(50% + 38px) !important;
+    top: calc(50% + 56px) !important;
   }
 
   .hero-side-btn-prev {
@@ -7819,7 +7820,7 @@ textarea {
   .hero-side-btn {
     width: 34px;
     height: 34px;
-    top: calc(50% + 32px) !important;
+    top: calc(50% + 52px) !important;
     background: rgba(14, 16, 20, 0.9);
   }
 }
