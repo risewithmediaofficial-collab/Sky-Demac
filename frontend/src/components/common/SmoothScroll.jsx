@@ -42,6 +42,11 @@ export default function SmoothScroll({ children }) {
 
       window.__lenis = lenis;
 
+      if (document.documentElement.classList.contains("is-wheel-loading")) {
+        lenis.scrollTo(0, { immediate: true });
+        lenis.stop();
+      }
+
       // Connect Lenis to ScrollTrigger
       lenis.on("scroll", ScrollTrigger.update);
 
@@ -57,6 +62,10 @@ export default function SmoothScroll({ children }) {
 
     // Smoothly handle in-page hash links (e.g. #services, #contact, #home)
     const handleAnchorClick = (e) => {
+      if (document.documentElement.classList.contains("is-wheel-loading")) {
+        e.preventDefault();
+        return;
+      }
       const anchor = e.target.closest("a[href*='#']");
       if (!anchor) return;
 

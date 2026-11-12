@@ -1,5 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+const SCROLL_LOCK_CLASS = "is-wheel-loading";
+const SCROLL_KEYS = new Set([
+  " ",
+  "Spacebar",
+  "PageUp",
+  "PageDown",
+  "Home",
+  "End",
+  "ArrowUp",
+  "ArrowDown",
+]);
 
 const FRAME_COUNT = 36;
 const FRAME_RATE = 28; // Smooth clockwise rotation
@@ -32,15 +46,92 @@ export default function WheelLoader({ onFinish }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    if (window.__wheelSplashTimer) {
+      clearTimeout(window.__wheelSplashTimer);
+      window.__wheelSplashTimer = null;
+    }
+
     // Remove static HTML splash overlay from index.html so WheelLoader takes over seamlessly
     const staticSplash = document.getElementById("initial-splash-overlay");
     if (staticSplash) {
       staticSplash.remove();
     }
 
-    // Lock page scroll during loader so lower website sections can never be scrolled to
-    const prevOverflow = document.body.style.overflow;
+    // Lock page scroll on both desktop & mobile through the entire load and wheel-docking animation
+    const rootEl = document.documentElement;
+    const prevHtmlOverflow = rootEl.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    rootEl.classList.add(SCROLL_LOCK_CLASS);
+    rootEl.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
+    window.scrollTo(0, 0);
+    if (window.__lenis) {
+      window.__lenis.scrollTo(0, { immediate: true });
+      window.__lenis.stop();
+    }
+
+    const preventScrollEvent = (e) => {
+      if (e.cancelable) e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const preventScrollKey = (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (SCROLL_KEYS.has(e.key) || e.code === "Space") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const keepPinnedAtTop = () => {
+      if (window.scrollY !== 0 || window.scrollX !== 0) {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    window.addEventListener("wheel", preventScrollEvent, {
+      passive: false,
+      capture: true,
+    });
+    window.addEventListener("touchmove", preventScrollEvent, {
+      passive: false,
+      capture: true,
+    });
+    window.addEventListener("keydown", preventScrollKey, { capture: true });
+    window.addEventListener("scroll", keepPinnedAtTop, { passive: true });
+    document.addEventListener("touchmove", preventScrollEvent, {
+      passive: false,
+      capture: true,
+    });
+
+    let isUnlocked = false;
+    const unlockScroll = () => {
+      if (isUnlocked) return;
+      isUnlocked = true;
+      rootEl.classList.remove(SCROLL_LOCK_CLASS);
+      rootEl.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "auto";
+      }
+      window.removeEventListener("wheel", preventScrollEvent, { capture: true });
+      window.removeEventListener("touchmove", preventScrollEvent, {
+        capture: true,
+      });
+      window.removeEventListener("keydown", preventScrollKey, { capture: true });
+      window.removeEventListener("scroll", keepPinnedAtTop);
+      document.removeEventListener("touchmove", preventScrollEvent, {
+        capture: true,
+      });
+      if (window.__lenis) {
+        window.__lenis.start();
+      }
+      requestAnimationFrame(() => {
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.refresh();
+      });
+    };
 
     // Preload background image and all 36 frames immediately
     const bg = new Image();
@@ -89,6 +180,7 @@ export default function WheelLoader({ onFinish }) {
 
     // At 1.1s: calculate exact coordinates of the hero car wheel and begin morph/dock
     const dockTimer = setTimeout(() => {
+      keepPinnedAtTop();
       const phone = document.querySelector(".fold-phone");
       if (phone) {
         const rect = phone.getBoundingClientRect();
@@ -112,18 +204,18 @@ export default function WheelLoader({ onFinish }) {
 
     // At 2.0s: finish loading, hero section takes over seamlessly
     const finishTimer = setTimeout(() => {
-      document.body.style.overflow = prevOverflow;
       if (onFinish) onFinish();
     }, TOTAL_LOADER_TIME);
 
-    // At 2.15s: remove loader overlay completely from DOM
+    // At 2.15s: wheel placement and handoff complete — unlock scroll and remove loader overlay
     const removeTimer = setTimeout(() => {
+      unlockScroll();
       setIsRemoved(true);
       if (rafId) cancelAnimationFrame(rafId);
     }, TOTAL_LOADER_TIME + 150);
 
     return () => {
-      document.body.style.overflow = prevOverflow;
+      unlockScroll();
       if (rafId) cancelAnimationFrame(rafId);
       clearTimeout(dockTimer);
       clearTimeout(finishTimer);
@@ -135,13 +227,15 @@ export default function WheelLoader({ onFinish }) {
 
   const content = (
     <>
-      {/* Full-screen Dark Overlay that dissolves smoothly over the hero section */}
+      {/* Full-screen blocking layer (dissolves visually during docking while still blocking scroll) */}
       <div
-        className={`fixed inset-0 z-[999998] pointer-events-none select-none transition-opacity duration-700 ease-out ${
+        className={`fixed inset-0 z-[999998] pointer-events-auto select-none transition-opacity duration-700 ease-out ${
           isDocking ? "opacity-0" : "opacity-100"
         }`}
         style={{
           backgroundColor: "#090909",
+          touchAction: "none",
+          overscrollBehavior: "none",
         }}
         aria-hidden="true"
       />

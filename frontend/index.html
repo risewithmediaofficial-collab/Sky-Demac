@@ -160,6 +160,22 @@
     />
     <title>%BUSINESS_TITLE%</title>
     <style>
+      html.is-wheel-loading,
+      html.is-wheel-loading body {
+        overflow: hidden !important;
+        height: 100% !important;
+        max-height: 100svh !important;
+        overscroll-behavior: none !important;
+        touch-action: none !important;
+        scroll-behavior: auto !important;
+        scrollbar-width: none !important;
+      }
+      html.is-wheel-loading::-webkit-scrollbar,
+      html.is-wheel-loading body::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
       #initial-splash-overlay {
         position: fixed;
         inset: 0;
@@ -169,7 +185,9 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        pointer-events: none;
+        pointer-events: auto;
+        touch-action: none;
+        overscroll-behavior: none;
         user-select: none;
       }
       .initial-splash-wheel-box {
@@ -259,6 +277,18 @@
         box-shadow: 0 0 8px rgba(227, 30, 36, 0.8);
       }
     </style>
+    <script>
+      (function () {
+        var path = window.location.pathname;
+        if (path === "/" || path === "") {
+          if ("scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+          }
+          document.documentElement.classList.add("is-wheel-loading");
+          window.scrollTo(0, 0);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="initial-splash-overlay">
@@ -284,10 +314,20 @@
       </div>
     </div>
     <script>
-      if (window.location.pathname !== '/' && window.location.pathname !== '') {
-        var splash = document.getElementById('initial-splash-overlay');
-        if (splash) splash.remove();
-      }
+      (function () {
+        var path = window.location.pathname;
+        if (path !== "/" && path !== "") {
+          document.documentElement.classList.remove("is-wheel-loading");
+          var splash = document.getElementById("initial-splash-overlay");
+          if (splash) splash.remove();
+        } else {
+          window.__wheelSplashTimer = window.setTimeout(function () {
+            document.documentElement.classList.remove("is-wheel-loading");
+            var splash = document.getElementById("initial-splash-overlay");
+            if (splash) splash.remove();
+          }, 10000);
+        }
+      })();
     </script>
     <div id="root"></div>
     <noscript
