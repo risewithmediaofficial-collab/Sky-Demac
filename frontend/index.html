@@ -2,7 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Favicon & Search Engine Identity Icons (Google Search Snippet Compatible) -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="144x144" href="/favicon-144x144.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#101113" />
     <meta name="description" content="%BUSINESS_DESCRIPTION%" />
@@ -10,22 +22,22 @@
     <meta name="robots" content="%ROBOTS%" />
     <!-- Geo Location Tags - Krishnagiri, Tamil Nadu -->
     <meta name="geo.region" content="IN-TN" />
-    <meta name="geo.placename" content="Krishnagiri" />
-    <meta name="geo.position" content="12.5266;78.2140" />
-    <meta name="ICBM" content="12.5266, 78.2140" />
+    <meta name="geo.placename" content="Krishnagiri, Agasipalli" />
+    <meta name="geo.position" content="12.5152;78.2110" />
+    <meta name="ICBM" content="12.5152, 78.2110" />
 
     <!-- Open Graph Protocol -->
     <meta property="og:locale" content="en_IN" />
-    <meta property="og:site_name" content="SkyDemac Automotive" />
+    <meta property="og:site_name" content="Sky Demac Automotive" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="%BUSINESS_TITLE%" />
     <meta property="og:description" content="%BUSINESS_DESCRIPTION%" />
-    <meta property="og:image" content="%BUSINESS_URL%/images/dodge-challenger-workshop.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="800" />
+    <meta property="og:image" content="https://skydemac.com/images/sky-demac-logo.png" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="601" />
     <meta
       property="og:image:alt"
-      content="SkyDemac Car Detailing and Automotive Care Studio in Krishnagiri"
+      content="Sky Demac Automotive - Premium Car Detailing & Multi-Brand Service Studio in Krishnagiri"
     />
     <meta property="og:url" content="%BUSINESS_URL%" />
 
@@ -33,104 +45,149 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="%BUSINESS_TITLE%" />
     <meta name="twitter:description" content="%BUSINESS_DESCRIPTION%" />
-    <meta name="twitter:image" content="%BUSINESS_URL%/images/dodge-challenger-workshop.jpg" />
+    <meta name="twitter:image" content="https://skydemac.com/images/sky-demac-logo.png" />
     <link rel="canonical" href="%BUSINESS_URL%" />
 
     <!-- JSON-LD LocalBusiness & AutoRepair Structured Data Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": ["AutoRepair", "AutomotiveBusiness"],
-      "@id": "https://skydemac.com/#localbusiness",
-      "name": "SkyDemac Automotive",
-      "alternateName": ["SkyDemac Car Detailing Krishnagiri", "SkyDemac"],
-      "url": "https://skydemac.com/",
-      "logo": "https://skydemac.com/images/skey%20demac%20logo.png",
-      "image": "https://skydemac.com/images/dodge-challenger-workshop.jpg",
-      "description": "Premium car detailing showroom and automotive care center in Krishnagiri, Tamil Nadu. Specializing in ceramic coating, Paint Protection Film (PPF), multi-stage polishing, foam wash, and deep interior detailing.",
-      "telephone": "+917598111621",
-      "priceRange": "₹₹",
-      "currenciesAccepted": "INR",
-      "paymentAccepted": "Cash, Credit Card, Debit Card, UPI",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "NH 48",
-        "addressLocality": "Krishnagiri",
-        "addressRegion": "Tamil Nadu",
-        "postalCode": "635001",
-        "addressCountry": "IN"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 12.5266,
-        "longitude": 78.2140
-      },
-      "hasMap": "https://maps.app.goo.gl/KTnsp5N789gTdqfV9?g_st=iw",
-      "openingHoursSpecification": [
+      "@graph": [
         {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          "opens": "09:00",
-          "closes": "20:00"
-        }
-      ],
-      "sameAs": [
-        "https://www.instagram.com/sky.demac",
-        "https://maps.app.goo.gl/KTnsp5N789gTdqfV9?g_st=iw"
-      ],
-      "areaServed": [
-        { "@type": "City", "name": "Krishnagiri" },
-        { "@type": "City", "name": "Hosur" },
-        { "@type": "City", "name": "Bargur" },
-        { "@type": "City", "name": "Shoolagiri" },
-        { "@type": "City", "name": "Kaveripattinam" }
-      ],
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Car Detailing & Care Services",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Car Detailing in Krishnagiri",
-              "description": "Comprehensive exterior and interior automotive detailing, decontamination, and surface refinement."
-            }
+          "@type": ["AutoRepair", "AutomotiveBusiness", "LocalBusiness"],
+          "@id": "https://skydemac.com/#localbusiness",
+          "name": "Sky Demac Automotive",
+          "legalName": "Sky Demac Automotive",
+          "alternateName": [
+            "Sky Demac",
+            "SkyDemac",
+            "Sky Demac Krishnagiri",
+            "Sky Demac Detailing",
+            "Sky Detailing & Mechanics",
+            "SkyDemac Automotive"
+          ],
+          "url": "https://skydemac.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://skydemac.com/#logo",
+            "url": "https://skydemac.com/favicon-512x512.png",
+            "contentUrl": "https://skydemac.com/favicon-512x512.png",
+            "caption": "Sky Demac Automotive Logo",
+            "width": 512,
+            "height": 512
           },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Ceramic Coating in Krishnagiri",
-              "description": "9H nano-ceramic and graphene coatings providing hydrophobic gloss, UV resistance, and chemical protection."
-            }
+          "image": [
+            "https://skydemac.com/images/sky-demac-logo.png",
+            "https://skydemac.com/images/dodge-challenger-workshop.jpg",
+            "https://skydemac.com/images/ferrari-red-studio.jpg"
+          ],
+          "description": "Krishnagiri's premier auto detailing showroom and multi-brand car service studio on Salem Bypass Road, Agasipalli. Specializing in 9H ceramic coating, self-healing Paint Protection Film (PPF), multi-stage paint correction, foam wash, interior deep cleaning, and precision mechanical maintenance.",
+          "telephone": "+917598111621",
+          "priceRange": "₹₹",
+          "currenciesAccepted": "INR",
+          "paymentAccepted": "Cash, UPI, Credit Card, Debit Card, Net Banking",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "657/1B1H1, Salem Bypass Road, Near Maruti Showroom, Agasipalli",
+            "addressLocality": "Krishnagiri",
+            "addressRegion": "Tamil Nadu",
+            "postalCode": "635002",
+            "addressCountry": "IN"
           },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Paint Protection Film (PPF) in Krishnagiri",
-              "description": "Self-healing ultra-clear TPU film safeguarding vehicle panels against rock chips, scratches, and abrasions."
-            }
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 12.5152,
+            "longitude": 78.2110
           },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Car Wash & Interior Detailing in Krishnagiri",
-              "description": "pH-neutral snow foam wash, underbody chassis blast, steam extraction, and deep upholstery shampoo."
+          "hasMap": "https://maps.app.goo.gl/KTnsp5N789gTdqfV9?g_st=iw",
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+              "opens": "09:00",
+              "closes": "20:00"
             }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Car Polishing & Paint Correction in Krishnagiri",
-              "description": "Multi-stage machine compounding and polishing eliminating swirl marks and restoring optical clarity."
-            }
+          ],
+          "sameAs": [
+            "https://maps.app.goo.gl/KTnsp5N789gTdqfV9?g_st=iw",
+            "https://www.google.com/maps?cid=2050557404419978075",
+            "https://www.instagram.com/sky.demac"
+          ],
+          "areaServed": [
+            { "@type": "City", "name": "Krishnagiri" },
+            { "@type": "Place", "name": "Agasipalli" },
+            { "@type": "City", "name": "Hosur" },
+            { "@type": "City", "name": "Bargur" },
+            { "@type": "City", "name": "Shoolagiri" },
+            { "@type": "City", "name": "Kaveripattinam" },
+            { "@type": "City", "name": "Dharmapuri" }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Sky Demac Automotive Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Car Detailing in Krishnagiri",
+                  "description": "Comprehensive exterior and interior automotive detailing, decontamination, and surface refinement."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Ceramic Coating in Krishnagiri",
+                  "description": "9H nano-ceramic and graphene coatings providing hydrophobic gloss, UV resistance, and chemical protection."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Paint Protection Film (PPF) in Krishnagiri",
+                  "description": "Self-healing ultra-clear TPU optical film safeguarding vehicle panels against rock chips, scratches, and road debris."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Car Wash & Interior Spa in Krishnagiri",
+                  "description": "pH-neutral snow foam wash, underbody chassis blast, steam extraction, and deep upholstery sanitisation."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Car Service & Mechanical Care in Krishnagiri",
+                  "description": "OEM multi-brand computerized diagnostics, 40-point safety inspection, brake service, and periodic maintenance."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Car Polishing & Paint Correction in Krishnagiri",
+                  "description": "Multi-stage machine compounding and polishing eliminating swirl marks and restoring optical clarity."
+                }
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://skydemac.com/#website",
+          "url": "https://skydemac.com/",
+          "name": "Sky Demac Automotive",
+          "alternateName": ["Sky Demac", "SkyDemac", "Sky Demac Krishnagiri"],
+          "publisher": {
+            "@id": "https://skydemac.com/#localbusiness"
+          }
+        }
+      ]
     }
     </script>
     <link

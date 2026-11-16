@@ -60,15 +60,30 @@ export default function Header() {
   const location = useLocation();
   const isHome = location.pathname === "/";
 
-  // Prevent background scrolling when mobile side drawer is open
+  // Prevent background scrolling when mobile side drawer is open (locks html, body, and Lenis smooth scroll)
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+      if (window.__lenis) {
+        window.__lenis.stop();
+      }
     } else {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.body.style.touchAction = "";
+      if (window.__lenis) {
+        window.__lenis.start();
+      }
     }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.body.style.touchAction = "";
+      if (window.__lenis) {
+        window.__lenis.start();
+      }
     };
   }, [open]);
 
@@ -151,6 +166,10 @@ export default function Header() {
       <div
         className={`nav-backdrop ${open ? "is-open" : ""}`}
         onClick={closeMenus}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
         aria-hidden="true"
       />
 
