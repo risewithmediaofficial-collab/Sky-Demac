@@ -18,7 +18,7 @@ export const business = {
     whatsapp: "+91 75981 11621",
     email: "contact@skydemac.com",
     address: "NH 48, Krishnagiri, Tamil Nadu, India",
-    mapUrl: "https://maps.app.goo.gl/h1ZjCz9rYjmRxPST6?g_st=iw",
+    mapUrl: "https://maps.app.goo.gl/KTnsp5N789gTdqfV9?g_st=iw",
     instagramUrl: "https://www.instagram.com/sky.demac?psln=MTB3N3o0YzJlNnA5Yw%3D%3D&utm_source=qr",
     openingHours: "Mon – Sat: 9:00 AM – 8:00 PM",
     socialLinks: [

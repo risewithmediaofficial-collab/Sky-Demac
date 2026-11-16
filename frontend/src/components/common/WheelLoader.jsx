@@ -16,10 +16,10 @@ const SCROLL_KEYS = new Set([
 ]);
 
 const FRAME_COUNT = 36;
-const FRAME_RATE = 28; // Smooth clockwise rotation
+const FRAME_RATE = 18; // Decreased frame rate for smoother and lighter performance
 const FRAME_INTERVAL = 1000 / FRAME_RATE;
-const TOTAL_LOADER_TIME = 2000; // Exactly 2 seconds
-const DOCK_START_TIME = 1100; // Start morph/dock into the car wheel at 1.1s
+const TOTAL_LOADER_TIME = 1300; // Fast 1.3-second total intro
+const DOCK_START_TIME = 700; // Starts docking into the car at 0.7s
 
 const wheelFrames = Array.from({ length: FRAME_COUNT }, (_, i) =>
   `/wheel-hero/frames/wheel-${String(i).padStart(2, "0")}.webp`
@@ -150,8 +150,8 @@ export default function WheelLoader({ onFinish }) {
     const animateWheel = (now) => {
       const elapsed = Math.min(TOTAL_LOADER_TIME, now - startTime);
 
-      // As it docks in the last 150ms, lock smoothly onto frame 0 (the exact original rim angle)
-      if (elapsed >= TOTAL_LOADER_TIME - 150) {
+      // As it docks in the last 100ms, lock smoothly onto frame 0 (the exact original rim angle)
+      if (elapsed >= TOTAL_LOADER_TIME - 100) {
         if (wheelImgRef.current) {
           wheelImgRef.current.src = wheelFrames[0];
         }
@@ -167,7 +167,7 @@ export default function WheelLoader({ onFinish }) {
         }
       }
 
-      // Progress bar fill over 2000ms
+      // Progress bar fill over TOTAL_LOADER_TIME
       if (progressLineRef.current) {
         const pct = (elapsed / TOTAL_LOADER_TIME) * 100;
         progressLineRef.current.style.width = `${pct}%`;
@@ -178,7 +178,7 @@ export default function WheelLoader({ onFinish }) {
 
     rafId = requestAnimationFrame(animateWheel);
 
-    // At 1.1s: calculate exact coordinates of the hero car wheel and begin morph/dock
+    // At 0.7s: calculate exact coordinates of the hero car wheel and begin morph/dock
     const dockTimer = setTimeout(() => {
       keepPinnedAtTop();
       const phone = document.querySelector(".fold-phone");
@@ -202,17 +202,17 @@ export default function WheelLoader({ onFinish }) {
       setIsDocking(true);
     }, DOCK_START_TIME);
 
-    // At 2.0s: finish loading, hero section takes over seamlessly
+    // At 1.3s: finish loading, hero section takes over seamlessly
     const finishTimer = setTimeout(() => {
       if (onFinish) onFinish();
     }, TOTAL_LOADER_TIME);
 
-    // At 2.15s: wheel placement and handoff complete — unlock scroll and remove loader overlay
+    // At 1.4s: wheel placement and handoff complete — unlock scroll and remove loader overlay
     const removeTimer = setTimeout(() => {
       unlockScroll();
       setIsRemoved(true);
       if (rafId) cancelAnimationFrame(rafId);
-    }, TOTAL_LOADER_TIME + 150);
+    }, TOTAL_LOADER_TIME + 100);
 
     return () => {
       unlockScroll();
@@ -229,7 +229,7 @@ export default function WheelLoader({ onFinish }) {
     <>
       {/* Full-screen blocking layer (dissolves visually during docking while still blocking scroll) */}
       <div
-        className={`fixed inset-0 z-[999998] pointer-events-auto select-none transition-opacity duration-700 ease-out ${
+        className={`fixed inset-0 z-[999998] pointer-events-auto select-none transition-opacity duration-500 ease-out ${
           isDocking ? "opacity-0" : "opacity-100"
         }`}
         style={{
@@ -247,7 +247,7 @@ export default function WheelLoader({ onFinish }) {
           isDocking && targetStyle
             ? {
                 ...targetStyle,
-                transition: "all 0.85s cubic-bezier(0.22, 1, 0.36, 1)",
+                transition: "all 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
               }
             : {
                 left: "50%",
@@ -255,13 +255,13 @@ export default function WheelLoader({ onFinish }) {
                 width: "clamp(190px, 24vw, 260px)",
                 height: "clamp(190px, 24vw, 260px)",
                 transform: "translate(-50%, -50%)",
-                transition: "all 0.85s cubic-bezier(0.22, 1, 0.36, 1)",
+                transition: "all 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
               }
         }
       >
         {/* Ambient radial red glow (fades out as it approaches car) */}
         <div
-          className={`absolute inset-[-20%] rounded-full transition-opacity duration-500 pointer-events-none ${
+          className={`absolute inset-[-20%] rounded-full transition-opacity duration-300 pointer-events-none ${
             isDocking ? "opacity-0" : "opacity-100"
           }`}
           style={{
@@ -288,7 +288,7 @@ export default function WheelLoader({ onFinish }) {
 
       {/* Loader Branding and Progress Indicator (Fades out when docking begins) */}
       <div
-        className={`fixed left-1/2 bottom-[14%] -translate-x-1/2 z-[999999] pointer-events-none select-none flex flex-col items-center gap-2 transition-all duration-300 ${
+        className={`fixed left-1/2 bottom-[14%] -translate-x-1/2 z-[999999] pointer-events-none select-none flex flex-col items-center gap-2 transition-all duration-200 ${
           isDocking ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}
       >

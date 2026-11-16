@@ -79,10 +79,10 @@ export default function BookServicePage() {
                   <span>Direct email available on service confirmation.</span>
                 </div>)}
 
-              {business.address ? (<div className="contact-item">
+              {business.address ? (<a className="contact-item" href={business.mapUrl} target="_blank" rel="noreferrer" title="Open Workshop in Google Maps">
                   <MapPin size={18}/>
                   <span>{business.address}</span>
-                </div>) : (<div className="contact-pending">
+                </a>) : (<div className="contact-pending">
                   <MapPin size={18}/>
                   <span>Workshop address confirmed upon appointment.</span>
                 </div>)}
