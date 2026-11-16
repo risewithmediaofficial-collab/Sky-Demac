@@ -10,13 +10,13 @@ const scenes = [
     id: "opening",
     label: "Car Detailing in Krishnagiri",
     eyebrow: "KRISHNAGIRI • CAR DETAILING SHOWROOM",
-    title: "Professional Car Detailing in Krishnagiri",
+    title: "Car Detailing in Krishnagiri",
     copy: "Krishnagiri's premier studio for 9H ceramic coating & PPF.",
     image: "/wheel-hero/hero-background.webp",
   },
   {
     id: "mechanical",
-    label: "Mechanical Care",
+    label: "Precision Car Service in Krishnagiri",
     eyebrow: "02 / PERIODIC SERVICE & MECHANICAL",
     title: "Precision Car Service in Krishnagiri",
     copy: "OEM computerized diagnostics & precision maintenance.",
@@ -24,7 +24,7 @@ const scenes = [
   },
   {
     id: "detailing",
-    label: "Ceramic & Polishing",
+    label: "Ceramic Coating & Paint Correction in Krishnagiri",
     eyebrow: "03 / CERAMIC COATING & POLISHING",
     title: "Ceramic Coating & Paint Correction in Krishnagiri",
     copy: "Multi-stage swirl correction & 9H nano-ceramic gloss.",
@@ -32,7 +32,7 @@ const scenes = [
   },
   {
     id: "exterior",
-    label: protectionEnabled ? "Paint Protection Film (PPF)" : "Exterior Care",
+    label: protectionEnabled ? "PPF Coating & Paint Protection Film" : "Exterior Care & Foam Wash",
     eyebrow: protectionEnabled ? "04 / PPF PAINT PROTECTION FILM" : "04 / EXTERIOR CARE",
     title: protectionEnabled ? "PPF Coating & Paint Protection Film" : "Exterior Care & Foam Wash",
     copy: protectionEnabled ? "Optical TPU film to shield paint from stone chips." : "Precision finish and exterior vehicle protection.",
@@ -40,7 +40,7 @@ const scenes = [
   },
   {
     id: "complete",
-    label: "Complete Car Care",
+    label: "Car Interior Deep Cleaning & Car Spa",
     eyebrow: "05 / COMPLETE AUTOMOTIVE CARE",
     title: "Car Interior Deep Cleaning & Car Spa",
     copy: "Touchless foam wash & deep interior sanitisation.",
@@ -82,7 +82,7 @@ function Caption({ index }) {
       {index === 0 ? (
         <h1 className="modern-display-heading" style={{ color: "#ffffff" }}>
           <span style={{ color: "#ffffff" }}>CAR DETAILING </span>
-          <span className="accent-text" style={{ color: "#e31e24" }}>IN KRISHNAGIRI.</span>
+          <span className="accent-text" style={{ color: "#e31e24" }}>IN KRISHNAGIRI</span>
         </h1>
       ) : (
         <h2 className="modern-display-heading" style={{ color: "#ffffff" }}>
@@ -594,7 +594,7 @@ export default function FoldingHero() {
                 <span className="hint-label-desktop">DRAG OR SCROLL SIDEWAYS TO EXPLORE</span>
               </span>
               <span className="hint-chapter-status-mobile" aria-hidden="true">
-                0{activeIndex + 1} / 05 · {scenes[activeIndex].label}
+                0{activeIndex + 1} / 05 · {scenes[activeIndex].title}
               </span>
             </div>
             <span className="hint-chevron hint-chevron-right" aria-hidden="true">
@@ -611,11 +611,11 @@ export default function FoldingHero() {
           <div className="cinema-chapter">
             <span className="cinema-chapter-number">0{activeIndex + 1}</span>
             <span className="cinema-chapter-line" />
-            <span>{scenes[activeIndex].label}</span>
+            <span>{scenes[activeIndex].title}</span>
             <span className="cinema-chapter-total">/ 05</span>
           </div>
           <div className="cinema-mobile-status" aria-hidden="true">
-            0{activeIndex + 1} / 05 · {scenes[activeIndex].label}
+            0{activeIndex + 1} / 05 · {scenes[activeIndex].title}
           </div>
           <div className="cinema-chapter-dots" aria-label="Select chapter">
             {scenes.map((s, idx) => (
@@ -624,7 +624,7 @@ export default function FoldingHero() {
                 type="button"
                 className={`chapter-dot ${activeIndex === idx ? "is-active" : ""}`}
                 onClick={() => goToChapter(idx)}
-                aria-label={`Jump to chapter ${idx + 1}: ${s.label}`}
+                aria-label={`Jump to chapter ${idx + 1}: ${s.title}`}
               >
                 0{idx + 1}
               </button>

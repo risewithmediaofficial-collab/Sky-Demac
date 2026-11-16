@@ -9,32 +9,33 @@ const protectionEnabled = ["ppf", "ceramic-coating", "specialised-coating"].some
 const scenes = [
   {
     id: "opening",
-    label: "The opening",
-    eyebrow: "PRECISION ENGINEERING.",
+    label: "Car Detailing in Krishnagiri",
+    eyebrow: "KRISHNAGIRI • CAR DETAILING SHOWROOM",
+    title: "Car Detailing in Krishnagiri",
     copy: "Bespoke automotive care. Masterful precision.",
     image: "/wheel-hero/hero-background.webp",
   },
   {
     id: "mechanical",
-    label: "Mechanical care",
+    label: "Precision Car Service in Krishnagiri",
     eyebrow: "02 / MECHANICAL CARE",
-    title: "Precision in every service.",
+    title: "Precision Car Service in Krishnagiri",
     copy: "A closer look. A clearer understanding.",
     image: "/images/dodge-challenger-workshop.jpg",
   },
   {
     id: "detailing",
-    label: "The finer details",
+    label: "Ceramic Coating & Paint Correction in Krishnagiri",
     eyebrow: "03 / THE FINER DETAILS",
-    title: "Every detail. Refined.",
+    title: "Ceramic Coating & Paint Correction in Krishnagiri",
     copy: "A considered approach to every surface.",
     image: "/images/ferrari-red-studio.jpg",
   },
   {
     id: "exterior",
-    label: protectionEnabled ? "Paint protection" : "Exterior care",
+    label: protectionEnabled ? "PPF Coating & Paint Protection Film" : "Exterior Care & Foam Wash",
     eyebrow: protectionEnabled ? "04 / PAINT PROTECTION" : "04 / EXTERIOR CARE",
-    title: protectionEnabled ? "Protect every finish." : "Care for every curve.",
+    title: protectionEnabled ? "PPF Coating & Paint Protection Film" : "Exterior Care & Foam Wash",
     copy: protectionEnabled
       ? "An illustrative study in surface protection."
       : "Thoughtful care, down to the finish.",
@@ -42,9 +43,9 @@ const scenes = [
   },
   {
     id: "complete",
-    label: "Complete care",
+    label: "Car Interior Deep Cleaning & Car Spa",
     eyebrow: "05 / COMPLETE AUTOMOTIVE CARE",
-    title: "Complete care. One destination.",
+    title: "Car Interior Deep Cleaning & Car Spa",
     copy: "For the everyday drive. And everything that drives you.",
     image: "/images/ferrari-red-action.jpg",
   },
