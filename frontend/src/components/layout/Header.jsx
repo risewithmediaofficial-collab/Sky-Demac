@@ -61,11 +61,17 @@ export default function Header() {
   const isHome = location.pathname === "/";
 
   // Prevent background scrolling when mobile side drawer is open (locks html, body, and Lenis smooth scroll)
+  // and notifies global listeners (e.g. QuickAccessDock to disappear smoothly)
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
       document.body.style.touchAction = "none";
+      document.body.classList.add("mobile-menu-open", "mobile-drawer-is-open");
+      document.documentElement.classList.add("mobile-menu-open", "mobile-drawer-is-open");
+      window.dispatchEvent(
+        new CustomEvent("mobile-menu-change", { detail: { open: true } })
+      );
       if (window.__lenis) {
         window.__lenis.stop();
       }
@@ -73,6 +79,11 @@ export default function Header() {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
       document.body.style.touchAction = "";
+      document.body.classList.remove("mobile-menu-open", "mobile-drawer-is-open");
+      document.documentElement.classList.remove("mobile-menu-open", "mobile-drawer-is-open");
+      window.dispatchEvent(
+        new CustomEvent("mobile-menu-change", { detail: { open: false } })
+      );
       if (window.__lenis) {
         window.__lenis.start();
       }
@@ -81,6 +92,11 @@ export default function Header() {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
       document.body.style.touchAction = "";
+      document.body.classList.remove("mobile-menu-open", "mobile-drawer-is-open");
+      document.documentElement.classList.remove("mobile-menu-open", "mobile-drawer-is-open");
+      window.dispatchEvent(
+        new CustomEvent("mobile-menu-change", { detail: { open: false } })
+      );
       if (window.__lenis) {
         window.__lenis.start();
       }

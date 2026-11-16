@@ -16,10 +16,10 @@ const SCROLL_KEYS = new Set([
 ]);
 
 const FRAME_COUNT = 36;
-const FRAME_RATE = 18; // Decreased frame rate for smoother and lighter performance
+const FRAME_RATE = 28; // High-rpm rapid spin for an ultra-fast, thrilling intro
 const FRAME_INTERVAL = 1000 / FRAME_RATE;
-const TOTAL_LOADER_TIME = 1300; // Fast 1.3-second total intro
-const DOCK_START_TIME = 700; // Starts docking into the car at 0.7s
+const TOTAL_LOADER_TIME = 820; // Ultra-fast 0.82-second total intro
+const DOCK_START_TIME = 350; // Starts docking into the car at 0.35s
 
 const wheelFrames = Array.from({ length: FRAME_COUNT }, (_, i) =>
   `/wheel-hero/frames/wheel-${String(i).padStart(2, "0")}.webp`
@@ -202,17 +202,17 @@ export default function WheelLoader({ onFinish }) {
       setIsDocking(true);
     }, DOCK_START_TIME);
 
-    // At 1.3s: finish loading, hero section takes over seamlessly
+    // At 0.82s: finish loading, hero section takes over seamlessly
     const finishTimer = setTimeout(() => {
       if (onFinish) onFinish();
     }, TOTAL_LOADER_TIME);
 
-    // At 1.4s: wheel placement and handoff complete — unlock scroll and remove loader overlay
+    // At 0.88s: wheel placement and handoff complete — unlock scroll and remove loader overlay
     const removeTimer = setTimeout(() => {
       unlockScroll();
       setIsRemoved(true);
       if (rafId) cancelAnimationFrame(rafId);
-    }, TOTAL_LOADER_TIME + 100);
+    }, TOTAL_LOADER_TIME + 60);
 
     return () => {
       unlockScroll();
@@ -247,7 +247,7 @@ export default function WheelLoader({ onFinish }) {
           isDocking && targetStyle
             ? {
                 ...targetStyle,
-                transition: "all 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+                transition: "all 0.44s cubic-bezier(0.16, 1, 0.3, 1)",
               }
             : {
                 left: "50%",
@@ -255,7 +255,7 @@ export default function WheelLoader({ onFinish }) {
                 width: "clamp(190px, 24vw, 260px)",
                 height: "clamp(190px, 24vw, 260px)",
                 transform: "translate(-50%, -50%)",
-                transition: "all 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+                transition: "all 0.44s cubic-bezier(0.16, 1, 0.3, 1)",
               }
         }
       >

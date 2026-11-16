@@ -11,7 +11,26 @@ import { business } from "../../config";
 
 export default function QuickAccessDock() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const dockRef = useRef(null);
+
+  // Listen to mobile menu drawer opening/closing to disappear immediately
+  useEffect(() => {
+    const handleMenuChange = (e) => {
+      const open = !!e.detail?.open;
+      setIsDrawerOpen(open);
+      if (open) {
+        setIsOpen(false);
+      }
+    };
+
+    if (typeof document !== "undefined" && document.body.classList.contains("mobile-menu-open")) {
+      setIsDrawerOpen(true);
+    }
+
+    window.addEventListener("mobile-menu-change", handleMenuChange);
+    return () => window.removeEventListener("mobile-menu-change", handleMenuChange);
+  }, []);
 
   // Close dock on Escape key or outside click
   useEffect(() => {
@@ -44,8 +63,9 @@ export default function QuickAccessDock() {
   return (
     <div
       ref={dockRef}
-      className={`quick-access-wrapper ${isOpen ? "is-expanded" : "is-collapsed"}`}
+      className={`quick-access-wrapper ${isOpen ? "is-expanded" : "is-collapsed"} ${isDrawerOpen ? "is-hidden-by-drawer" : ""}`}
       aria-label="Quick contact & booking options"
+      aria-hidden={isDrawerOpen}
     >
       {/* Expanded Menu Options */}
       <aside
